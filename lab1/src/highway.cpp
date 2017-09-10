@@ -7,14 +7,21 @@ int main() {
   vector<Car*> cars(100);
 
   for (int i = 0; i < cars.size(); i++) {
-    if (i < 25) {
-      cars[i] = new Prius();
-    } else if (25 < i && i < 50) {
-      cars[i] = new Mazda3();
-    } else if (50 < i && i < 75) {
-      cars[i] = new Model3();
-    } else {
-      cars[i] = new Herbie();
+    switch (i % 4) {
+      case 0:
+        cars[i] = new Prius();
+        break;
+      case 1:
+        cars[i] = new Mazda3();
+        break;
+      case 2:
+        cars[i] = new Model3();
+        break;
+      case 3:
+        cars[i] = new Herbie();
+        break;
+      default:
+        cout << "wtf" << endl;
     }
   }
 

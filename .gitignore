@@ -1,3 +1,5 @@
+.DS_Store
+
 # CLion project and build files
 /.idea
 /cmake-*
