@@ -4,8 +4,6 @@
 #include "physics.h"
 using namespace std;
 
-const double DENSITY_AIR = 1.225;
-
 Car::Car(string model, double mass, double engine_force, double drag_area) {
     this->model = model;
     this->mass = mass;
@@ -27,13 +25,14 @@ void Car::accelerate(bool on) {
 }
 
 void Car::drive(double dt) {
+    const double DENSITY_AIR = 1.225;
     double a = this->state.acceleration;
     double v = this->state.velocity;
     double p = this->state.position;
     double engine_force = this->is_accelerating ? this->engine_force : 0;
     double drag_force = v > 0 ? DENSITY_AIR * this->drag_area * v * v / 2 : 0;        
 
-    a += physics::compute_acceleration(this->engine_force - drag_force, this->mass);
+    a += physics::compute_acceleration(engine_force - drag_force, this->mass);
     v = physics::compute_velocity(v, a, dt);
     p = physics::compute_position(p, v, dt);
     this->state.set(p, v, a, this->state.time + dt);

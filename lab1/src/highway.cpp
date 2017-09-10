@@ -4,7 +4,7 @@
 using namespace std;
 
 int main() {
-  vector<Car*> cars(100);
+  vector<Car*> cars(4);
 
   for (int i = 0; i < cars.size(); i++) {
     switch (i % 4) {
@@ -25,20 +25,17 @@ int main() {
     }
   }
 
+  int steps = 100;
   double dt = 0.1;
-  for (int i = 0; i < cars.size(); i++) {
-    for (Car*& car : cars) {
+  for (int i = 0; i < steps; i++) {
+    for (Car* car : cars) {
       Car& c = *car;
       State * s = c.getState();
 
-      if (s->velocity >= 28) {
-        c.accelerate(false);
-      } else {
-        c.accelerate(true);
-      }
+      s->velocity >= 28.0 ? c.accelerate(false) : c.accelerate(true);
 
       c.drive(dt);
-      cout << "\nName: " << c.getModel() << "\nPosition: " << s->position << endl;
+      cout << "\n" << c.getModel() << "\nState: " << *s << endl;
     }
   }
 
