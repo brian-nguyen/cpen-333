@@ -26,8 +26,8 @@ int main() {
   }
 
   double dt = 0.1;
-  for (int i = 0; i < 100; i++) {
-    for (Car * car : cars) {
+  for (int i = 0; i < cars.size(); i++) {
+    for (Car*& car : cars) {
       Car& c = *car;
       State * s = c.getState();
 
