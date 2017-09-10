@@ -25,7 +25,8 @@ int main() {
     }
   }
 
-  int steps = 100;
+  // run for 3 minutes
+  int steps = 1800;
   double dt = 0.1;
   for (int i = 0; i < steps; i++) {
     for (Car* car : cars) {
@@ -35,8 +36,14 @@ int main() {
       s->velocity >= 28.0 ? c.accelerate(false) : c.accelerate(true);
 
       c.drive(dt);
-      cout << "\n" << c.getModel() << "\nState: " << *s << endl;
+      // cout << "\n" << c.getModel() << "\nState: " << *s << endl;
     }
+
+    for (int j = 0; j < 4; j++) {
+      Car& c = *cars[j];
+      cout << c.getModel() << "\nState: " << *c.getState() << endl << "----------------" << endl;;
+    }
+    cout << "*******************************************" << endl;
   }
 
   for (Car * car : cars) {
