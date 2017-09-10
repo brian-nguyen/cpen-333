@@ -2,4 +2,6 @@
 /.idea
 /cmake-*
 
+/*/bin
+
 /slides
