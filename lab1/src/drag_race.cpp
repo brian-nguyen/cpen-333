@@ -27,7 +27,8 @@ int main() {
     double p_car2 = car2.getState()->position;
 
     if (p_car1 >= QUARTER_MILE || p_car2 >= QUARTER_MILE) {
-      cout << "Race Over " << (p_car1 > p_car2 ? "Car 1 won" : "Car 2 won") << endl;
+      cout << "Race Over. Winner is..." << endl;
+      cout << (p_car1 > p_car2 ? car1 : car2) << endl;
       break;
     }
 

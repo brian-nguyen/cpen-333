@@ -20,6 +20,14 @@ double Car::getMass() {
     return this->mass;
 }
 
+double Car::getEngineForce() {
+    return this->engine_force;
+}
+
+double Car::getDragArea() {
+    return this->drag_area;
+}
+
 void Car::accelerate(bool on) {
     this->is_accelerating = on;
 }

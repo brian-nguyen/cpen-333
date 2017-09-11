@@ -19,11 +19,13 @@ class Car {
     
   public:
     Car(string model, double mass, double engine_force, double drag_area);
-    string getModel();    // gets the model name
-    double getMass();          // mass of the car
-    void accelerate(bool on);  // turn the accelerator on/off
-    virtual void drive(double dt);     // drive the car for an amount of time dt
-    State * getState();          // returns the car's state
+    string getModel();
+    double getMass();
+    double getEngineForce();
+    double getDragArea();
+    void accelerate(bool on);
+    virtual void drive(double dt);
+    State * getState();
     bool is_accelerating;
 };
 
@@ -51,7 +53,7 @@ class Herbie: public Car {
 };
 
 inline std::ostream& operator<<(std::ostream& os, Car& car) {  
-  os << "model: " << car.getModel() << ", mass: " << car.getMass();
+  os << "model: " << car.getModel() << ", mass: " << car.getMass() << ", engine force: " << car.getEngineForce() << ", drag area: " << car.getDragArea();
   return os;
 }
 

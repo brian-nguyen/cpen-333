@@ -25,9 +25,9 @@ int main() {
     }
   }
 
-  int steps = 2400;
-  double dt = 0.1;
-  for (int i = 0; i < steps; i++) {
+  int steps = 60;
+  double dt = 0.01;
+  for (double i = 0; i < steps; i += dt) {
     for (Car* car : cars) {
       Car& c = *car;
       State * s = c.getState();
