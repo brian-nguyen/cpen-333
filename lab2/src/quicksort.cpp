@@ -22,33 +22,13 @@ void printArray(std::vector<int>& data) {
 // partitions elements low through high (inclusive)
 // around a pivot and returns the pivot index
 // chooses the highest element as pivot
-size_t partition2(std::vector<int>& data, int low, int high) {
-  int i = low - 1;
-
-  // go through array and swap smaller
-  // element with one greater than the pivot
-  for (int j = low; j < high - 1; j++) {
-    if (data[j] < data[high]) {
-      // move left pointer forward
-      i++;
-      std::swap(data[i], data[j]);
-    }
-  }
-
-  // move pivot into position ahead 
-  // of where left pointer stopped
-  // this is the partitioning index
-  if (data[i + 1] > data[high]) std::swap(data[i + 1], data[high]);
-  return i + 1;
-}
-
 size_t partition(std::vector<int>& data, int low, int high) {
   int pivot = data[high];
   int i = low;
   int j = high;
   while (1) {
     // find two elements to be swapped
-    // move both pointers in
+    // by moving both pointers in
     while (data[i] < pivot) i++;
     while (data[j] > pivot) j--;
 
@@ -97,22 +77,22 @@ int main() {
   auto duration = t2-t1;
   auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
   long ms = duration_ms.count();
-  std::cout << "Sequential duration: " << ms << " ms " << std::endl;
+  std::cout << "\nSequential duration: " << ms << " ms " << std::endl;
 
   // sort v2 using parallel algorithm
   t1 = std::chrono::high_resolution_clock::now();
-  // parallel_quicksort(v2, 0, v2.size() - 1);
+  parallel_quicksort(v2, 0, v2.size() - 1);
   t2 = std::chrono::high_resolution_clock::now();
   duration = t2-t1;
   duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
   ms = duration_ms.count();
-  std::cout << "Parallel duration: " << ms << " ms" << std::endl;
+  std::cout << "Parallel duration: " << ms << " ms\n" << std::endl;
 
   // TEST
   if (isSorted(v1)) {
-    std::cout << "SEQUENTIAL SORT PASSED\n" << std::endl;
+    std::cout << "SEQUENTIAL SORT PASSED" << std::endl;
   } else {
-    std::cout << "SEQUENTIAL SORT FAILED\n" << std::endl;
+    std::cout << "SEQUENTIAL SORT FAILED" << std::endl;
   }
 
   if (isSorted(v2)) {
