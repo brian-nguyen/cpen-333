@@ -1,0 +1,4 @@
+# CLion project and build files
+/.idea
+/cmake-*
+

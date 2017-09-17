@@ -1,0 +1,16 @@
+{
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Quicksort",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/bin/quicksort.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "Build Quicksort"
+            }
+        ]
+    }
