@@ -22,14 +22,13 @@ void printArray(std::vector<int>& data) {
 // partitions elements low through high (inclusive)
 // around a pivot and returns the pivot index
 // chooses the highest element as pivot
-size_t partition(std::vector<int>& data, int low, int high) {
-  int& pivot = data[high];
+size_t partition2(std::vector<int>& data, int low, int high) {
   int i = low - 1;
 
   // go through array and swap smaller
   // element with one greater than the pivot
   for (int j = low; j < high - 1; j++) {
-    if (data[j] < pivot) {
+    if (data[j] < data[high]) {
       // move left pointer forward
       i++;
       std::swap(data[i], data[j]);
@@ -39,8 +38,25 @@ size_t partition(std::vector<int>& data, int low, int high) {
   // move pivot into position ahead 
   // of where left pointer stopped
   // this is the partitioning index
-  if (data[i + 1] > pivot) std::swap(data[i + 1], pivot);
+  if (data[i + 1] > data[high]) std::swap(data[i + 1], data[high]);
   return i + 1;
+}
+
+size_t partition(std::vector<int>& data, int low, int high) {
+  int pivot = data[high];
+  int i = low;
+  int j = high;
+  while (1) {
+    // find two elements to be swapped
+    // move both pointers in
+    while (data[i] < pivot) i++;
+    while (data[j] > pivot) j--;
+
+    // if pointers have met
+    if (i >= j) return j;
+
+    std::swap(data[i], data[j]);
+  }
 }
 
 void quicksort(std::vector<int>& data, int low, int high) {
@@ -66,7 +82,7 @@ void parallel_quicksort(std::vector<int>& data, int low, int high) {
 int main() {
 
   // create two copies of random data
-  const int VECTOR_SIZE = 100000;
+  const int VECTOR_SIZE = 1000000;
   std::vector<int> v1(VECTOR_SIZE, 0);
   // fill with random integers
   for (int i=0; i < VECTOR_SIZE; ++i) {
