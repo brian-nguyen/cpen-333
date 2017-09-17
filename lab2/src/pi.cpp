@@ -132,7 +132,7 @@ int main() {
   std::cout << "Duration: " << ms << " ms" << std::endl;
   
   t1 = std::chrono::high_resolution_clock::now();
-  pi = estimate_pi_multithread(10000);
+  pi = estimate_pi_multithread(1000000);
   ms = getDuration(t1);
   std::cout << "\nThreaded estimate of PI is: " << pi << std::endl;
   std::cout << "Duration: " << ms << " ms" << std::endl;
