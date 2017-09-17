@@ -23,7 +23,7 @@ void printArray(std::vector<int>& data) {
 // around a pivot and returns the pivot index
 // chooses the highest element as pivot
 size_t partition(std::vector<int>& data, int low, int high) {
-  int pivot = data[high];
+  int& pivot = data[high];
   int i = low - 1;
 
   // go through array and swap smaller
@@ -66,9 +66,7 @@ void parallel_quicksort(std::vector<int>& data, int low, int high) {
 int main() {
 
   // create two copies of random data
-  const int VECTOR_SIZE = 1000000;
-  std::cout << VECTOR_SIZE << std::endl;
-  
+  const int VECTOR_SIZE = 100000;
   std::vector<int> v1(VECTOR_SIZE, 0);
   // fill with random integers
   for (int i=0; i < VECTOR_SIZE; ++i) {
