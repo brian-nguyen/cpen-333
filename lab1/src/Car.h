@@ -48,6 +48,7 @@ class Herbie: public Car {
   public:
     Herbie() : Car("Herbie", 1000, 1000, 0.01) { }
     void drive(double dt) {
+      cout << "HERBIE DRIVING" << endl;;
       Car::drive(dt);
     }
 };
