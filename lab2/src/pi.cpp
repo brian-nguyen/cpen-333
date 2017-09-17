@@ -3,8 +3,8 @@
 #include <random>
 
 double estimate_pi(int nsamples) {
-  std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
-  std::uniform_real_distribution<double> dist(-1.0, 1.0);
+  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
+  static std::uniform_real_distribution<double> dist(-1.0, 1.0);
 
   // generate n points and test if
   // they are in the circle
@@ -14,9 +14,7 @@ double estimate_pi(int nsamples) {
     double y = dist(rnd);
     // a point is in the circle
     // when x^2 + y^2 <= r^2
-    bool hit = std::pow(x, 2) + std::pow(y, 2) <= 1;
-    if (hit) numHits++;
-    std::cout << "Point " << i << ": (" << x << ", " << y << ")" << (hit ? " HIT" : " MISS") << std::endl;
+    if (std::pow(x, 2) + std::pow(y, 2) <= 1) numHits++;
   }
 
   double fraction = numHits / nsamples;
@@ -30,6 +28,9 @@ void pi_sampler(std::vector<bool>& hits, int idx) {
   static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
 
+  double x = dist(rnd);
+  double y = dist(rnd);
+  if (std::pow(x, 2) + std::pow(y, 2) <= 1) hits[idx] = true;
 }
 
 // naively uses multithreading to try to speed up computations
@@ -62,13 +63,15 @@ double estimate_pi_multithread_naive(int nsamples) {
 
 // count number of hits using nsamples, populates hits[idx]
 void pi_hits(std::vector<int> hits, int idx, int nsamples) {
-
   // single instance of random engine and distribution
-  static std::default_random_engine rnd;
+  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
 
-  // YOUR CODE HERE
-
+  for (int i = 0; i < nsamples; i++) {
+    double x = dist(rnd);
+    double y = dist(rnd);
+    if (std::pow(x, 2) + std::pow(y, 2) <= 1) hits[idx]++;
+  }
 }
 
 // divides work among threads intelligently
@@ -108,9 +111,16 @@ double estimate_pi_multithread(int nsamples) {
 }
 
 int main() {
-
+  // 1000 samples accurate to only 1 decimal place
+  // need 1 billion samples to get 3 decimal places
   double pi = estimate_pi(1000);
   std::cout << "My estimate of PI is: " << pi << std::endl;
+
+  pi = estimate_pi_multithread_naive(1000);
+  std::cout << "My 2nd estimate of PI is: " << pi << std::endl;
+
+  pi = estimate_pi_multithread(1000);
+  std::cout << "My 3rd estimate of PI is: " << pi << std::endl;
 
   return 0;
 }
