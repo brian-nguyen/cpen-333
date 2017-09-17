@@ -6,14 +6,21 @@ double estimate_pi(int nsamples) {
   std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_real_distribution<double> dist(-1.0, 1.0);
 
-  // generate n points
+  // generate n points and test if
+  // they are in the circle
+  double numHits = 0.0;
   for (int i = 0; i < nsamples; i++) {
     double x = dist(rnd);
     double y = dist(rnd);
-    std::cout << "(" << x << ", " << y << ")" << std::endl;
+    // a point is in the circle
+    // when x^2 + y^2 <= r^2
+    bool hit = std::pow(x, 2) + std::pow(y, 2) <= 1;
+    if (hit) numHits++;
+    std::cout << "Point " << i << ": (" << x << ", " << y << ")" << (hit ? " HIT" : " MISS") << std::endl;
   }
-  
-  return 0;
+
+  double fraction = numHits / nsamples;
+  return fraction * 4;
 }
 
 // generates a random sample and sets hits[idx]
