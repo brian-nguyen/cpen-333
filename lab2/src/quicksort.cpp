@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <chrono>
 
 // checks if sorted
 bool isSorted(std::vector<int>& data) {
@@ -53,7 +54,14 @@ void quicksort(std::vector<int>& data, int low, int high) {
 
 // sorts elements low through high (inclusive) using multiple threads
 void parallel_quicksort(std::vector<int>& data, int low, int high) {
-  // your code here
+  if (low < high) {
+    int p_idx = partition(data, low, high);
+
+    // sort 1 partition in different thread
+    std::thread* sortLeft = new std::thread(parallel_quicksort, std::ref(data), low, p_idx - 1);
+    quicksort(data, p_idx + 1, high);
+    sortLeft->join();
+  }
 }
 
 int main() {
@@ -68,7 +76,6 @@ int main() {
   std::vector<int> v2 = v1;  // copy all contents
 
   // sort v1 using sequential algorithm
-  printArray(v1);
   quicksort(v1, 0, v1.size() - 1);
   // sort v2 using parallel algorithm
   parallel_quicksort(v2, 0, v2.size() - 1);
@@ -82,7 +89,7 @@ int main() {
   if (isSorted(v2)) {
     std::cout << "PARALLEL SORT PASSED" << std::endl;
   } else {
-    std::cout << "PARALLEL SORT FAILED"
+    std::cout << "PARALLEL SORT FAILED" << std::endl;
   }
 
   return 0;
