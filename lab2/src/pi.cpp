@@ -40,23 +40,23 @@ double estimate_pi_multithread_naive(int nsamples) {
 
   // create and store all threads
   std::vector<std::thread> threads;
-  for (int i=0; i<nsamples; ++i) {
+  for (int i = 0; i < nsamples; ++i) {
     threads.push_back(std::thread(pi_sampler, std::ref(hits), i));
   }
 
   // wait for all threads to complete
-  for (int i=0; i<nsamples; ++i) {
+  for (int i = 0; i < nsamples; ++i) {
     threads[i].join();
   }
 
   // estimate our value of PI
   double pi = 0;
-  for (int i=0; i<nsamples; ++i) {
+  for (int i = 0; i < nsamples; ++i) {
     if (hits[i]) {
       pi = pi + 1;
     }
   }
-  pi = pi / nsamples*4;
+  pi = pi / nsamples * 4;
 
   return pi;
 }
@@ -76,36 +76,31 @@ void pi_hits(std::vector<int> hits, int idx, int nsamples) {
 
 // divides work among threads intelligently
 double estimate_pi_multithread(int nsamples) {
-
-  // number of available cores
+  // create nthread hit counters
   int nthreads = std::thread::hardware_concurrency();
-
-  // hit counts
   std::vector<int> hits(nthreads, 0);
 
   // create and store threads
   std::vector<std::thread> threads;
   int msamples = 0; // samples accounted for
-  for (int i=0; i<nthreads-1; ++i) {
-    threads.push_back(
-        std::thread(pi_hits, std::ref(hits), i, nsamples/nthreads));
-    msamples += nsamples/nthreads;
+  for (int i = 0; i < nthreads - 1; ++i) {
+    threads.push_back(std::thread(pi_hits, std::ref(hits), i, nsamples / nthreads));
+    msamples += nsamples / nthreads;
   }
   // remaining samples
-  threads.push_back(
-      std::thread(pi_hits, std::ref(hits), nthreads-1, nsamples-msamples));
+  threads.push_back(std::thread(pi_hits, std::ref(hits), nthreads - 1, nsamples - msamples));
 
   // wait for threads to finish
-  for (int i=0; i<nthreads; ++i) {
+  for (int i = 0; i < nthreads; ++i) {
     threads[i].join();
   }
 
   // estimate pi
   double pi = 0;
-  for (int i=0; i<nthreads; ++i) {
+  for (int i = 0; i < nthreads; ++i) {
     pi += hits[i];
   }
-  pi = pi/nsamples*4;
+  pi = pi / nsamples * 4;
 
   return pi;
 }
