@@ -11,6 +11,28 @@
                 "externalConsole": false,
                 "MIMode": "lldb",
                 "preLaunchTask": "Build Quicksort"
+            },
+            {
+                "name": "Pi",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/bin/pi.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "Build Pi"
+            },
+            {
+                "name": "Integration",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/bin/integration.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "Build Integration"
             }
         ]
     }

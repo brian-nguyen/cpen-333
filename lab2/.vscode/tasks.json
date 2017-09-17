@@ -7,6 +7,16 @@
             "taskName": "Build Quicksort",
             "type": "shell",
             "command": "g++ ./src/quicksort.cpp -o ./bin/quicksort.exe -g -std=c++11"
+        },
+        {
+            "taskName": "Build Pi",
+            "type": "shell",
+            "command": "g++ ./src/pi.cpp -o ./bin/pi.exe -g -std=c++11"
+        },
+        {
+            "taskName": "Build Integration",
+            "type": "shell",
+            "command": "g++ ./src/integration.cpp -o ./bin/integration.exe -g -std=c++11"
         }
     ]
 }
