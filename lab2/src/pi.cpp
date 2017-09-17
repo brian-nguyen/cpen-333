@@ -3,20 +3,25 @@
 #include <random>
 
 double estimate_pi(int nsamples) {
+  std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
+  std::uniform_real_distribution<double> dist(-1.0, 1.0);
 
-  // YOUR CODE HERE
-
+  // generate n points
+  for (int i = 0; i < nsamples; i++) {
+    double x = dist(rnd);
+    double y = dist(rnd);
+    std::cout << "(" << x << ", " << y << ")" << std::endl;
+  }
+  
+  return 0;
 }
 
 // generates a random sample and sets hits[idx]
 // to true if within the unit circle
 void pi_sampler(std::vector<bool>& hits, int idx) {
-
   // single instance of random engine and distribution
-  static std::default_random_engine rnd;
+  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
-
-  // YOUR CODE HERE
 
 }
 
