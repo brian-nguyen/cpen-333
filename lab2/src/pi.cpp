@@ -18,8 +18,8 @@ double estimate_pi(int nsamples) {
     if (std::pow(x, 2) + std::pow(y, 2) <= 1) numHits++;
   }
 
-  double fraction = numHits / nsamples;
-  return fraction * 4;
+  double pi = numHits / nsamples;
+  return pi * 4;
 }
 
 // generates a random sample and sets hits[idx]
@@ -116,10 +116,11 @@ long getDuration(std::chrono::time_point<std::__1::chrono::steady_clock, std::__
 
 int main() {
   // pi = 3.1415926536
-  int nsamples = 500000;
 
+  // 1000 samples gets pi accurate to 1 decimal place
+  // needs about 10 million samples to get 3 decimal place accuracy
   auto t1 = std::chrono::high_resolution_clock::now();  
-  double pi = estimate_pi(nsamples);
+  double pi = estimate_pi(10000000);
   long ms = getDuration(t1);
   std::cout << "My estimate of PI is: " << pi << std::endl;
   std::cout << "Duration: " << ms << " ms" << std::endl;
@@ -131,7 +132,7 @@ int main() {
   std::cout << "Duration: " << ms << " ms" << std::endl;
   
   t1 = std::chrono::high_resolution_clock::now();
-  pi = estimate_pi_multithread(nsamples);
+  pi = estimate_pi_multithread(10000);
   ms = getDuration(t1);
   std::cout << "\nThreaded estimate of PI is: " << pi << std::endl;
   std::cout << "Duration: " << ms << " ms" << std::endl;
