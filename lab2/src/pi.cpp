@@ -1,6 +1,7 @@
 #include <thread>
 #include <iostream>
 #include <random>
+#include <chrono>
 
 double estimate_pi(int nsamples) {
   static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
@@ -62,7 +63,7 @@ double estimate_pi_multithread_naive(int nsamples) {
 }
 
 // count number of hits using nsamples, populates hits[idx]
-void pi_hits(std::vector<int> hits, int idx, int nsamples) {
+void pi_hits(std::vector<int>& hits, int idx, int nsamples) {
   // single instance of random engine and distribution
   static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
@@ -105,17 +106,35 @@ double estimate_pi_multithread(int nsamples) {
   return pi;
 }
 
+long getDuration(std::chrono::time_point<std::__1::chrono::steady_clock, std::__1::chrono::nanoseconds> t1) {
+  auto t2 = std::chrono::high_resolution_clock::now();
+  auto duration = t2-t1;
+  auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
+  long ms = duration_ms.count();
+  return ms;
+}
+
 int main() {
-  // 1000 samples accurate to only 1 decimal place
-  // need 1 billion samples to get 3 decimal places
-  double pi = estimate_pi(1000);
+  // pi = 3.1415926536
+  int nsamples = 500000;
+
+  auto t1 = std::chrono::high_resolution_clock::now();  
+  double pi = estimate_pi(nsamples);
+  long ms = getDuration(t1);
   std::cout << "My estimate of PI is: " << pi << std::endl;
+  std::cout << "Duration: " << ms << " ms" << std::endl;
 
+  t1 = std::chrono::high_resolution_clock::now();
   pi = estimate_pi_multithread_naive(1000);
-  std::cout << "My 2nd estimate of PI is: " << pi << std::endl;
-
-  pi = estimate_pi_multithread(1000);
-  std::cout << "My 3rd estimate of PI is: " << pi << std::endl;
-
+  ms = getDuration(t1);
+  std::cout << "\nNaive threaded estimate of PI is: " << pi << std::endl;
+  std::cout << "Duration: " << ms << " ms" << std::endl;
+  
+  t1 = std::chrono::high_resolution_clock::now();
+  pi = estimate_pi_multithread(nsamples);
+  ms = getDuration(t1);
+  std::cout << "\nThreaded estimate of PI is: " << pi << std::endl;
+  std::cout << "Duration: " << ms << " ms" << std::endl;
+  
   return 0;
 }
