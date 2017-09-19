@@ -58,7 +58,6 @@ double MonteCarloIntegrate(int nsamples, DensityFn& fn) {
   static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
   
-  std::cout << " - Samples: " << nsamples << std::endl;
   double sum = 0.0;
   for (int i = 0; i < nsamples; i++) {
     // generate a point
@@ -96,8 +95,36 @@ double MonteCarloIntegrate(int nsamples, DensityFn& fn) {
   return sum / nsamples;
 }
 
-void summation(std::vector<double>& sums, int idx, int nsamples) {
-  
+void summation(std::vector<double>& sums, int idx, int nsamples, int fn) {
+  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
+  static std::uniform_real_distribution<double> dist(-1.0, 1.0);
+
+  for (int i = 0; i < nsamples; i++) {
+    Point p = { dist(rnd), dist(rnd), dist(rnd) };
+
+    while (!isWithinSphere(p)) {
+      p.x = dist(rnd);
+      p.y = dist(rnd);
+      p.z = dist(rnd);
+    }
+
+    double f;
+    switch (fn) {
+      case exponential:
+        f = exp(0 - pow(p.x, 2));
+        break;
+      case line:
+        f = std::abs(p.x + p.y + p.z);
+        break;
+      case sphere:
+        f = pow(p.x - 1, 2) + pow(p.y - 2, 2) + pow(p.z - 3, 2);      
+        break;
+      default:
+        std::cout << "Undefined Function" << std::endl;
+    }
+
+    sums[idx] += VOL_SPHERE * f;
+  }
 }
 
 double MonteCarloIntegrateThreaded(int nsamples, DensityFn& fn) {
@@ -110,27 +137,53 @@ double MonteCarloIntegrateThreaded(int nsamples, DensityFn& fn) {
 
   int msamples = 0;
   for (int i = 0; i < nthreads - 1; i++) {
-    threads.push_back(std::thread(summation, std::ref(sums), i, nsamples / nthreads));
+    threads.push_back(std::thread(summation, std::ref(sums), i, nsamples / nthreads, fn));
     msamples += nsamples / nthreads;
   }
-  threads.push_back(std::thread(summation, std::ref(sums), nthreads - 1, nsamples - msamples));
+  threads.push_back(std::thread(summation, std::ref(sums), nthreads - 1, nsamples - msamples, fn));
 
   for (int i = 0; i < nthreads; i++) {
     threads[i].join();
   }
 
-  return 0.0;
+  double integral = 0.0;
+  for (int i = 0; i < nthreads; i++) {
+    integral += sums[i];
+  }
+
+  return integral / nsamples;
+}
+
+long getDuration(std::chrono::time_point<std::__1::chrono::steady_clock, std::__1::chrono::nanoseconds> t1) {
+  auto t2 = std::chrono::high_resolution_clock::now();
+  auto duration = t2-t1;
+  auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
+  long ms = duration_ms.count();
+  return ms;
 }
 
 int main() {
+  int nsamples = 1000000;
   DensityFn f = exponential;
-  std::cout << "exp(-x^2) " << MonteCarloIntegrate(1000, f) << std::endl << std::endl;
+
+  std::cout << std::endl << "exp(-x^2)" << std::endl;
+  auto t1 = std::chrono::high_resolution_clock::now();
+  std::cout << "Sequential: " << MonteCarloIntegrate(nsamples, f) << " - " << getDuration(t1) << std::endl;
+  t1 = std::chrono::high_resolution_clock::now();
+  std::cout << "Threaded: " << MonteCarloIntegrateThreaded(nsamples, f) << " - " << getDuration(t1) << std::endl << std::endl;
 
   f = line;
-  std::cout << "abs(x + y + z) " << MonteCarloIntegrate(1000, f) << std::endl << std::endl;
-  
-  f = sphere;
-  std::cout << "(x - 1)^2 + (y - 2)^2 + (z - 3)^2 " << MonteCarloIntegrate(1000, f) << std::endl << std::endl;
+  std::cout << "abs(x + y + z)" << std::endl;
+  t1 = std::chrono::high_resolution_clock::now();
+  std::cout << "Sequential: " << MonteCarloIntegrate(nsamples, f) << " - " << getDuration(t1) << std::endl;
+  t1 = std::chrono::high_resolution_clock::now();
+  std::cout << "Threaded: " << MonteCarloIntegrateThreaded(nsamples, f) << " - " << getDuration(t1) << std::endl << std::endl;
 
+  f = sphere;
+  std::cout << "(x - 1)^2 + (y - 2)^2 + (z - 3)^2" << std::endl;
+  t1 = std::chrono::high_resolution_clock::now();
+  std::cout << "Sequential: " << MonteCarloIntegrate(nsamples, f) << " - " << getDuration(t1) << std::endl;
+  t1 = std::chrono::high_resolution_clock::now();
+  std::cout << "Threaded: " << MonteCarloIntegrateThreaded(nsamples, f) << " - " << getDuration(t1) << std::endl << std::endl;
   return 0;
 }
