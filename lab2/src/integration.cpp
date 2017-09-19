@@ -5,6 +5,7 @@
 
 double PI = 3.1415926536;
 double VOL_SPHERE = 4 / 3 * PI;
+enum DensityFn { exponential, line, sphere };
 
 // three-dimensional point
 struct Point {
@@ -53,11 +54,11 @@ bool isWithinSphere(Point& point) {
   return false;
 }
 
-double computeIntegral(int nsamples) {
+double computeIntegral(int nsamples, DensityFn& fn) {
   static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
   
-  // summation of all function values
+  std::cout << " - Samples: " << nsamples << std::endl;
   double sum = 0.0;
   for (int i = 0; i < nsamples; i++) {
     // generate a point
@@ -73,7 +74,22 @@ double computeIntegral(int nsamples) {
 
     // evaluate the function and
     // approximate integral
-    double f = exp(0 - pow(p.x, 2));
+    double f;
+    switch (fn) {
+      case exponential:
+        f = exp(0 - pow(p.x, 2));
+        break;
+      case line:
+        f = std::abs(p.x + p.y + p.z);
+        break;
+      case sphere:
+        f = pow(p.x - 1, 2) + pow(p.y - 2, 2) + pow(p.z - 3, 2);      
+        break;
+      default:
+        std::cout << "Undefined Function" << std::endl;
+        return 0.0;
+    }
+
     sum += VOL_SPHERE * f;
   }
 
@@ -81,6 +97,14 @@ double computeIntegral(int nsamples) {
 }
 
 int main() {
-  std::cout << computeIntegral(1000) << std::endl;
+  DensityFn f = exponential;
+  std::cout << "exp(-x^2) " << computeIntegral(1000, f) << std::endl << std::endl;
+
+  f = line;
+  std::cout << "abs(x + y + z) " << computeIntegral(1000, f) << std::endl << std::endl;
+  
+  f = sphere;
+  std::cout << "(x - 1)^2 + (y - 2)^2 + (z - 3)^2 " << computeIntegral(1000, f) << std::endl << std::endl;
+
   return 0;
 }
