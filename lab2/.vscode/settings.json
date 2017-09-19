@@ -34,7 +34,9 @@
         "iterator": "cpp",
         "string": "cpp",
         "utility": "cpp",
-        "vector": "cpp"
+        "vector": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp"
     },
     "C_Cpp.intelliSenseEngine": "Default"
 }
