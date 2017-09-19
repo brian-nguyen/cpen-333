@@ -54,7 +54,7 @@ bool isWithinSphere(Point& point) {
   return false;
 }
 
-double computeIntegral(int nsamples, DensityFn& fn) {
+double MonteCarloIntegrate(int nsamples, DensityFn& fn) {
   static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
   
@@ -96,15 +96,41 @@ double computeIntegral(int nsamples, DensityFn& fn) {
   return sum / nsamples;
 }
 
+void summation(std::vector<double>& sums, int idx, int nsamples) {
+  
+}
+
+double MonteCarloIntegrateThreaded(int nsamples, DensityFn& fn) {
+  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
+  static std::uniform_real_distribution<double> dist(-1.0, 1.0);
+
+  int nthreads = std::thread::hardware_concurrency();
+  std::vector<double> sums(nthreads, 0);
+  std::vector<std::thread> threads;
+
+  int msamples = 0;
+  for (int i = 0; i < nthreads - 1; i++) {
+    threads.push_back(std::thread(summation, std::ref(sums), i, nsamples / nthreads));
+    msamples += nsamples / nthreads;
+  }
+  threads.push_back(std::thread(summation, std::ref(sums), nthreads - 1, nsamples - msamples));
+
+  for (int i = 0; i < nthreads; i++) {
+    threads[i].join();
+  }
+
+  return 0.0;
+}
+
 int main() {
   DensityFn f = exponential;
-  std::cout << "exp(-x^2) " << computeIntegral(1000, f) << std::endl << std::endl;
+  std::cout << "exp(-x^2) " << MonteCarloIntegrate(1000, f) << std::endl << std::endl;
 
   f = line;
-  std::cout << "abs(x + y + z) " << computeIntegral(1000, f) << std::endl << std::endl;
+  std::cout << "abs(x + y + z) " << MonteCarloIntegrate(1000, f) << std::endl << std::endl;
   
   f = sphere;
-  std::cout << "(x - 1)^2 + (y - 2)^2 + (z - 3)^2 " << computeIntegral(1000, f) << std::endl << std::endl;
+  std::cout << "(x - 1)^2 + (y - 2)^2 + (z - 3)^2 " << MonteCarloIntegrate(1000, f) << std::endl << std::endl;
 
   return 0;
 }
