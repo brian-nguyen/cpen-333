@@ -54,6 +54,19 @@ bool isWithinSphere(Point& point) {
   return false;
 }
 
+double computeFunction(int fn, Point& p) {
+  switch (fn) {
+    case exponential:
+      return exp(0 - pow(p.x, 2));
+    case line:
+      return std::abs(p.x + p.y + p.z);
+    case sphere:
+      return pow(p.x - 1, 2) + pow(p.y - 2, 2) + pow(p.z - 3, 2);      
+    default:
+      return 0.0;
+  }
+}
+
 double MonteCarloIntegrate(int nsamples, DensityFn& fn) {
   static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
@@ -73,22 +86,7 @@ double MonteCarloIntegrate(int nsamples, DensityFn& fn) {
 
     // evaluate the function and
     // approximate integral
-    double f;
-    switch (fn) {
-      case exponential:
-        f = exp(0 - pow(p.x, 2));
-        break;
-      case line:
-        f = std::abs(p.x + p.y + p.z);
-        break;
-      case sphere:
-        f = pow(p.x - 1, 2) + pow(p.y - 2, 2) + pow(p.z - 3, 2);      
-        break;
-      default:
-        std::cout << "Undefined Function" << std::endl;
-        return 0.0;
-    }
-
+    double f = computeFunction(fn, p);
     sum += VOL_SPHERE * f;
   }
 
@@ -108,21 +106,7 @@ void summation(std::vector<double>& sums, int idx, int nsamples, int fn) {
       p.z = dist(rnd);
     }
 
-    double f;
-    switch (fn) {
-      case exponential:
-        f = exp(0 - pow(p.x, 2));
-        break;
-      case line:
-        f = std::abs(p.x + p.y + p.z);
-        break;
-      case sphere:
-        f = pow(p.x - 1, 2) + pow(p.y - 2, 2) + pow(p.z - 3, 2);      
-        break;
-      default:
-        std::cout << "Undefined Function" << std::endl;
-    }
-
+    double f = computeFunction(fn, p);
     sums[idx] += VOL_SPHERE * f;
   }
 }
