@@ -57,7 +57,7 @@ bool isWithinSphere(Point& point) {
 double computeFunction(int fn, Point& p) {
   switch (fn) {
     case exponential:
-      return exp(0 - pow(p.x, 2));
+      return exp(0 - (pow(p.x, 2) + pow(p.y, 2) + pow(p.z, 2)));
     case line:
       return std::abs(p.x + p.y + p.z);
     case sphere:
@@ -87,10 +87,16 @@ double MonteCarloIntegrate(int nsamples, DensityFn& fn) {
     // evaluate the function and
     // approximate integral
     double f = computeFunction(fn, p);
-    sum += VOL_SPHERE * f;
+    sum += f;
   }
 
-  return sum / nsamples;
+  return VOL_SPHERE * sum / nsamples;
+}
+
+void computeCenterOfMass(int nsamples, DensityFn& fn) {
+  std::vector<double> cx(2, 0);
+  std::vector<double> cy(2, 0);
+  std::vector<double> cz(2, 0);
 }
 
 void summation(std::vector<double>& sums, int idx, int nsamples, int fn) {
