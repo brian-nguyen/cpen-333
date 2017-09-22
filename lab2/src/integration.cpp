@@ -48,6 +48,14 @@ class ZFunction : public Function {
   }
 };
 
+class Density1 : public Function {
+public:
+ double operator()(double x, double y, double z) {
+   double norm2 = x*x+y*y+z*z;
+   return std::exp(-norm2);
+ }
+};
+
 bool isWithinSphere(Point& point) {
   if (std::pow(point.x, 2) + std::pow(point.y, 2) + std::pow(point.z, 2) <= 1) return true;
 
@@ -68,83 +76,19 @@ Point generateRandomPoint() {
   return p;
 }
 
-double computeFunction(int fn, Point& p) {
-  switch (fn) {
-    case exponential:
-      return exp(0 - (pow(p.x, 2) + pow(p.y, 2) + pow(p.z, 2)));
-    case line:
-      return std::abs(p.x + p.y + p.z);
-    case sphere:
-      return pow(p.x - 1, 2) + pow(p.y - 2, 2) + pow(p.z - 3, 2);      
-    default:
-      return 0.0;
-  }
-}
-
-double MonteCarloIntegrate(int nsamples, DensityFn& fn) {
-  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
-  static std::uniform_real_distribution<double> dist(-1.0, 1.0);
-  
-  double sum = 0.0;
-  for (int i = 0; i < nsamples; i++) {
-    Point p = generateRandomPoint();
-
-    // evaluate the function and
-    // approximate integral
-    double f = computeFunction(fn, p);
-    sum += f;
-  }
-
-  return VOL_SPHERE * sum / nsamples;
-}
-
-void MonteCarloIntegrate_2(std::vector<double>& c, int& nsamples, int fn, char multiplier) {
-  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
-  static std::uniform_real_distribution<double> dist(-1.0, 1.0);
-
-  for (int i = 0; i < nsamples; i++) {
-    Point p = generateRandomPoint();
-    c[0] += computeFunction(fn, p);
-    switch (multiplier) {
-      case 'x':
-        c[1] += p.x * c[0];
-        break;
-      case 'y':
-        c[1] += p.y * c[0];
-        break;
-      case 'z':
-        c[1] += p.z * c[0];
-        break;
-      default:
-        return;
-    }
-  }
-
-  c[0] *= VOL_SPHERE / nsamples;
-  c[1] *= VOL_SPHERE / nsamples;
-}
-
 void computeCenterOfMass(int nsamples, DensityFn& fn) {
-  std::vector<double> cx(2, 0);
-  std::vector<double> cy(2, 0);
-  std::vector<double> cz(2, 0);
 
-  MonteCarloIntegrate_2(cx, nsamples, fn, 'x');
-  MonteCarloIntegrate_2(cy, nsamples, fn, 'y');
-  MonteCarloIntegrate_2(cz, nsamples, fn, 'z');
-
-  std::cout << "Center of mass: (" << cx[1] / cx[0] << ", " << cy[1] / cx[0] << ", " << cz[1] / cx[0] << ")";
 }
 
-void summation(std::vector<double>& sums, int idx, int nsamples, int fn) {
+void summation(std::vector<double>& sums, int idx, int nsamples, Function& fn) {
   for (int i = 0; i < nsamples; i++) {
     Point p = generateRandomPoint();
-    double f = computeFunction(fn, p);
+    double f = fn(p.x, p.y, p.z);
     sums[idx] += VOL_SPHERE * f;
   }
 }
 
-double MonteCarloIntegrateThreaded(int nsamples, DensityFn& fn) {
+double MonteCarloIntegrateThreaded(int nsamples, Function& fn) {
   static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
 
@@ -154,10 +98,10 @@ double MonteCarloIntegrateThreaded(int nsamples, DensityFn& fn) {
 
   int msamples = 0;
   for (int i = 0; i < nthreads - 1; i++) {
-    threads.push_back(std::thread(summation, std::ref(sums), i, nsamples / nthreads, fn));
+    threads.push_back(std::thread(summation, std::ref(sums), i, nsamples / nthreads, std::ref(fn)));
     msamples += nsamples / nthreads;
   }
-  threads.push_back(std::thread(summation, std::ref(sums), nthreads - 1, nsamples - msamples, fn));
+  threads.push_back(std::thread(summation, std::ref(sums), nthreads - 1, nsamples - msamples, std::ref(fn)));
 
   for (int i = 0; i < nthreads; i++) {
     threads[i].join();
@@ -181,32 +125,8 @@ long getDuration(std::chrono::time_point<std::__1::chrono::steady_clock, std::__
 
 int main() {
   int nsamples = 1000000;
-  DensityFn f = exponential;
+  Density1 d1;
 
-  std::cout << std::endl << "exp(-x^2)" << std::endl;
-  auto t1 = std::chrono::high_resolution_clock::now();
-  std::cout << "Sequential - ";
-  computeCenterOfMass(nsamples, f);
-  std::cout << " - " << getDuration(t1) << std::endl;
-  // t1 = std::chrono::high_resolution_clock::now();
-  // std::cout << "Threaded - " << MonteCarloIntegrateThreaded(nsamples, f) << " - " << getDuration(t1) << std::endl << std::endl;
-
-  f = line;
-  std::cout << "abs(x + y + z)" << std::endl;
-  t1 = std::chrono::high_resolution_clock::now();
-  std::cout << "Sequential - ";
-  computeCenterOfMass(nsamples, f);
-  std::cout << " - " << getDuration(t1) << std::endl;
-  // t1 = std::chrono::high_resolution_clock::now();
-  // std::cout << "Threaded - " << MonteCarloIntegrateThreaded(nsamples, f) << " - " << getDuration(t1) << std::endl << std::endl;
-
-  f = sphere;
-  std::cout << "(x - 1)^2 + (y - 2)^2 + (z - 3)^2" << std::endl;
-  t1 = std::chrono::high_resolution_clock::now();
-  std::cout << "Sequential - ";
-  computeCenterOfMass(nsamples, f);
-  std::cout << " - " << getDuration(t1) << std::endl;
-  // t1 = std::chrono::high_resolution_clock::now();
-  // std::cout << "Threaded - " << MonteCarloIntegrateThreaded(nsamples, f) << " - " << getDuration(t1) << std::endl << std::endl;
+  std::cout << "d1(0.1,0.2,0.3): " << d1(0.1,0.2,0.3) << std::endl;
   return 0;
 }
