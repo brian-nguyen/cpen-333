@@ -100,9 +100,6 @@ void summation(std::vector<double>& sums, int idx, int nsamples, Function& fn) {
 }
 
 double MonteCarloIntegrateThreaded(int nsamples, Function& fn) {
-  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
-  static std::uniform_real_distribution<double> dist(-1.0, 1.0);
-
   int nthreads = std::thread::hardware_concurrency();
   std::vector<double> sums(nthreads, 0);
   std::vector<std::thread> threads;
