@@ -56,7 +56,7 @@ class Exponential : public Function {
   }
 };
 
-class Line: public Function {
+class Line : public Function {
   public:
     double operator()(double x, double y, double z) {
       return std::abs(x + y + z);
@@ -126,7 +126,7 @@ double MonteCarloIntegrateThreaded(int nsamples, Function& fn) {
   return integral / nsamples;
 }
 
-void computeCenterOfMass(std::vector<double> c, Function& fn, int& nsamples) {
+void computeCenterOfMass(std::vector<double>& c, Function& fn, int& nsamples) {
   XFunction xfn(fn);
   YFunction yfn(fn);
   ZFunction zfn(fn);
@@ -150,5 +150,16 @@ int main() {
   Exponential exponential;
   std::vector<double> c1(3, 0);
   computeCenterOfMass(c1, exponential, nsamples);
+  std::cout << "Center of mass: (" << c1[0] << ", " << c1[1] << ", " << c1[2] << ")" << std::endl;
+
+  Line line;
+  std::vector<double> c2(3, 0);
+  computeCenterOfMass(c2, line, nsamples);
+  std::cout << "Center of mass: (" << c2[0] << ", " << c2[1] << ", " << c2[2] << ")" << std::endl;
+
+  Sphere sphere;
+  std::vector<double> c3(3, 0);
+  computeCenterOfMass(c3, sphere, nsamples);
+  std::cout << "Center of mass: (" << c3[0] << ", " << c3[1] << ", " << c3[2] << ")" << std::endl;
   return 0;
 }
