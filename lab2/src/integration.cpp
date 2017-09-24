@@ -48,12 +48,26 @@ class ZFunction : public Function {
   }
 };
 
-class Density1 : public Function {
+class Exponential : public Function {
+ public:
+  double operator()(double x, double y, double z) {
+    double norm2 = x*x+y*y+z*z;
+    return std::exp(-norm2);
+  }
+};
+
+class Line: public Function {
+  public:
+    double operator()(double x, double y, double z) {
+      return std::abs(x + y + z);
+    }
+};
+
+class Sphere : public Function {
 public:
- double operator()(double x, double y, double z) {
-   double norm2 = x*x+y*y+z*z;
-   return std::exp(-norm2);
- }
+  double operator() (double x, double y, double z) {
+    return std::pow(x - 1, 2) + std::pow(y - 2, 2) + std::pow(z - 3, 2);
+  }
 };
 
 bool isWithinSphere(Point& point) {
@@ -67,17 +81,14 @@ Point generateRandomPoint() {
   static std::uniform_real_distribution<double> dist(-1.0, 1.0);
   Point p = { dist(rnd), dist(rnd), dist(rnd) };
 
-  while (!isWithinSphere(p)) {
+  do {
     p.x = dist(rnd);
     p.y = dist(rnd);
     p.z = dist(rnd);
   }
+  while (!isWithinSphere(p));
 
   return p;
-}
-
-void computeCenterOfMass(int nsamples, DensityFn& fn) {
-
 }
 
 void summation(std::vector<double>& sums, int idx, int nsamples, Function& fn) {
@@ -115,6 +126,16 @@ double MonteCarloIntegrateThreaded(int nsamples, Function& fn) {
   return integral / nsamples;
 }
 
+void computeCenterOfMass(std::vector<double> c, Function& fn, int& nsamples) {
+  XFunction xfn(fn);
+  YFunction yfn(fn);
+  ZFunction zfn(fn);
+  double denominator = MonteCarloIntegrateThreaded(nsamples, fn);
+  c[0] = MonteCarloIntegrateThreaded(nsamples, xfn) / denominator;
+  c[1] = MonteCarloIntegrateThreaded(nsamples, yfn) / denominator;
+  c[2] = MonteCarloIntegrateThreaded(nsamples, zfn) / denominator;
+}
+
 long getDuration(std::chrono::time_point<std::__1::chrono::steady_clock, std::__1::chrono::nanoseconds> t1) {
   auto t2 = std::chrono::high_resolution_clock::now();
   auto duration = t2-t1;
@@ -125,8 +146,9 @@ long getDuration(std::chrono::time_point<std::__1::chrono::steady_clock, std::__
 
 int main() {
   int nsamples = 1000000;
-  Density1 d1;
 
-  std::cout << "d1(0.1,0.2,0.3): " << d1(0.1,0.2,0.3) << std::endl;
+  Exponential exponential;
+  std::vector<double> c1(3, 0);
+  computeCenterOfMass(c1, exponential, nsamples);
   return 0;
 }
