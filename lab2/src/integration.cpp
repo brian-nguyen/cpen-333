@@ -5,7 +5,8 @@
 
 double PI = 3.1415926536;
 double VOL_SPHERE = 4 / 3 * PI;
-enum DensityFn { exponential, line, sphere };
+static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
+static std::uniform_real_distribution<double> dist(-1.0, 1.0);
 
 // three-dimensional point
 struct Point {
@@ -77,16 +78,12 @@ bool isWithinSphere(Point& point) {
 }
 
 Point generateRandomPoint() {
-  static std::default_random_engine rnd(std::chrono::system_clock::now().time_since_epoch().count());
-  static std::uniform_real_distribution<double> dist(-1.0, 1.0);
-  Point p = { dist(rnd), dist(rnd), dist(rnd) };
-
+  Point p = { 0, 0, 0};
   do {
     p.x = dist(rnd);
     p.y = dist(rnd);
     p.z = dist(rnd);
-  }
-  while (!isWithinSphere(p));
+  } while (!isWithinSphere(p));
 
   return p;
 }
