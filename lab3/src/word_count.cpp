@@ -8,10 +8,11 @@ std::string trim(const std::string& s) {
 
 int word_count(const std::string& line, int start_idx) {
   std::string trimmed = trim(line);
-
+  int length = trimmed.length();
   int nwords = 0;
+  
   int i = 0;
-  while (i < trimmed.length()) {
+  while (i < length) {
     // if space encountered, run through
     // all spaces and increment nwords
     if (trimmed[i] == ' ') {
@@ -22,7 +23,7 @@ int word_count(const std::string& line, int start_idx) {
     i++;
 
     // at end of line, increment nwords
-    if (i == trimmed.length() && trimmed[i] != ' ') {
+    if (i == length && trimmed[i] != ' ') {
       nwords++;
     }
   }
