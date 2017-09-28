@@ -32,6 +32,11 @@
             "taskName": "lab2/integration",
             "type": "shell",
             "command": "g++ ./lab2/src/integration.cpp -o ./lab2/bin/integration.exe -g -std=c++11"
+        },
+        {
+            "taskName": "lab3/wordCount",
+            "type": "shell",
+            "command": "g++ ./lab3/src/word_count_test.cpp ./lab3/src/word_count.cpp -o ./lab3/bin/word_count_test.exe -g -std=c++11"
         }
     ]
 }

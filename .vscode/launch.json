@@ -66,6 +66,17 @@
                 "externalConsole": false,
                 "MIMode": "lldb",
                 "preLaunchTask": "lab2/integration"
+            },
+            {
+                "name": "Lab3/WordCount",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab3/bin/word_count_test.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "lab3/wordCount"
             }
         ]
     }
