@@ -7,25 +7,21 @@ std::string trim(const std::string& s) {
 }
 
 int word_count(const std::string& line, int start_idx) {
-  std::string trimmed = trim(line);
-  int length = trimmed.length();
+  int length = line.length();
+  if (length == 0) return 0;
+
+  bool is_space = true;
   int nwords = 0;
-  
-  int i = 0;
+  int i = start_idx;
   while (i < length) {
-    // if space encountered, run through
-    // all spaces and increment nwords
-    if (trimmed[i] == ' ') {
-      while (trimmed[i] == ' ') i++;
+    if (is_space && line[i] != ' ') {
+      is_space = false;
       nwords++;
+    } else if (line[i] == ' ') {
+      is_space = true;
     }
 
     i++;
-
-    // at end of line, increment nwords
-    if (i == length && trimmed[i] != ' ') {
-      nwords++;
-    }
   }
 
   return nwords;
