@@ -1,0 +1,37 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "taskName": "lab1/highway",
+            "type": "shell",
+            "command": "g++ ./lab1/src/highway.cpp ./lab1/src/Car.cpp -o ./lab1/bin/highway.exe -g -std=c++11"
+        },
+        {
+            "taskName": "lab1/dragRace",
+            "type": "shell",
+            "command": "g++ ./lab1/src/drag_race.cpp ./lab1/src/Car.cpp -o ./lab1/bin/drag_race.exe -g -std=c++11"
+        },
+        {
+            "taskName": "lab1/carSimulator",
+            "type": "shell",
+            "command": "g++ ./lab1/src/car_simulator.cpp ./lab1/src/Car.cpp -o ./lab1/bin/car_simulator.exe -g -std=c++11"
+        },
+        {
+            "taskName": "lab2/quicksort",
+            "type": "shell",
+            "command": "g++ ./lab2/src/quicksort.cpp -o ./lab2/bin/quicksort.exe -g -std=c++11"
+        },
+        {
+            "taskName": "lab2/pi",
+            "type": "shell",
+            "command": "g++ ./lab2/src/pi.cpp -o ./lab2/bin/pi.exe -g -std=c++11"
+        },
+        {
+            "taskName": "lab2/integration",
+            "type": "shell",
+            "command": "g++ ./lab2/src/integration.cpp -o ./lab2/bin/integration.exe -g -std=c++11"
+        }
+    ]
+}

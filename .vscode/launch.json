@@ -1,0 +1,71 @@
+{
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Lab1/Highway",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab1/bin/highway.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "lab1/highway"
+            },
+            {
+                "name": "Lab1/DragRace",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab1/bin/drag_race.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": true,
+                "MIMode": "lldb",
+                "preLaunchTask": "lab1/dragRace"
+            },
+            {
+                "name": "Lab1/CarSimulator",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab1/bin/car_simulator.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": true,
+                "MIMode": "lldb",
+                "preLaunchTask": "lab1/carSimulator"
+            },
+            {
+                "name": "Lab2/Quicksort",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab2/bin/quicksort.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "lab2/quicksort"
+            },
+            {
+                "name": "Lab2/Pi",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab2/bin/pi.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "lab2/pi"
+            },
+            {
+                "name": "Lab2/Integration",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab2/bin/integration.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "lab2/integration"
+            }
+        ]
+    }
