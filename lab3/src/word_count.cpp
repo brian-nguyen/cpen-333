@@ -1,13 +1,28 @@
 #include "word_count.h"
 
-// implementation details
-int word_count(const std::string& line, int start_idx) {
+std::string trim(const std::string& s) {
+  unsigned int begin = s.find_first_not_of(' ');
+  unsigned int end = s.find_last_not_of(' ');
+  return s.substr(begin, (end - begin) + 1);
+}
 
-  // YOUR IMPLEMENTATION HERE
+int word_count(const std::string& line, int start_idx) {
+  std::string trimmed = trim(line);
 
   int nwords = 0;
-  for (int i = start_idx; i < line.length(); i++) {
-    if (line[i] == ' ') {
+  int i = 0;
+  while (i < trimmed.length()) {
+    // if space encountered, run through
+    // all spaces and increment nwords
+    if (trimmed[i] == ' ') {
+      while (trimmed[i] == ' ') i++;
+      nwords++;
+    }
+
+    i++;
+
+    // at end of line, increment nwords
+    if (i == trimmed.length() && trimmed[i] != ' ') {
       nwords++;
     }
   }

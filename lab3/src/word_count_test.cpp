@@ -56,10 +56,16 @@ void wc_tester(const std::string& line, int start_idx, int expected) {
 int main() {
 
   try {
-
-    // YOUR TESTS HERE
+    // ideal case
     wc_tester("hello world", 0, 2);
-
+    // extra whitespace between words
+    wc_tester("hello  world", 0, 2);
+    // only one word
+    wc_tester("helloworld", 0, 1);
+    // leading whitespace
+    wc_tester(" hello world", 0, 2);
+    // whitespace on both ends
+    wc_tester(" hello world   ", 0, 2);
   } catch(UnitTestException &ute) {
     std::cout << ute.info() << std::endl;
   }
