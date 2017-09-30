@@ -92,6 +92,7 @@ void count_character_words(const std::string& filename,
 
         int nwords = word_count(line, idx);
 
+        mutex.lock();
         // add character if doesn't exist, otherwise increment count
         auto it = wcounts.find(character);
         if (it == wcounts.end()) {
@@ -99,6 +100,7 @@ void count_character_words(const std::string& filename,
         } else {
           wcounts[character] += nwords;
         }
+        mutex.unlock();
 
       } else {
         character = "";  // reset character
