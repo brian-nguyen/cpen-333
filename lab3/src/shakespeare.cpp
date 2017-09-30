@@ -93,10 +93,12 @@ void count_character_words(const std::string& filename,
         int nwords = word_count(line, idx);
 
         // add character if doesn't exist, otherwise increment count
-
-        //=================================================
-        // YOUR JOB TO ADD WORD COUNT INFORMATION TO MAP
-        //=================================================
+        auto it = wcounts.find(character);
+        if (it == wcounts.end()) {
+          wcounts.insert({ character, nwords });
+        } else {
+          wcounts[character] += nwords;
+        }
 
       } else {
         character = "";  // reset character

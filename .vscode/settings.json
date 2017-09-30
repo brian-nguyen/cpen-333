@@ -36,7 +36,8 @@
         "utility": "cpp",
         "vector": "cpp",
         "functional": "cpp",
-        "tuple": "cpp"
+        "tuple": "cpp",
+        "__locale": "cpp"
     },
     "C_Cpp.intelliSenseEngine": "Default"
 }

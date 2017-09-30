@@ -77,6 +77,17 @@
                 "externalConsole": false,
                 "MIMode": "lldb",
                 "preLaunchTask": "lab3/wordCount"
+            },
+            {
+                "name": "Lab3/Shakespeare",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab3/bin/shakespeare.exe",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb",
+                "preLaunchTask": "lab3/shakespeare"
             }
         ]
     }
