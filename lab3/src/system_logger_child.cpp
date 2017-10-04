@@ -20,16 +20,17 @@ void run_logger(const std::string& processname,
   // mutex
   cpen333::process::mutex mutex("system_logger");
 
-  for (int i=0; i<message_count; ++i) {
+  for (int i = 0; i < message_count; ++i) {
     std::this_thread::sleep_for(std::chrono::milliseconds(rnd(eng)));
 
     // open file for "append"
     std::ofstream logfile;
     logfile.open(filename, std::ios_base::out | std::ios_base::app);
+    mutex.lock();
     logfile << processname << ": " << "message " << i << std::endl;
     std::cout << processname << ": " << "message " << i << std::endl;
+    mutex.unlock();
     logfile.close();
-
   }
 
 }

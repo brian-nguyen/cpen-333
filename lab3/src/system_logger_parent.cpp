@@ -13,7 +13,7 @@ int main() {
   const int nmessages = 100;
   const std::string logfile = "system_log.txt";
 
-  for (int i=0; i<nprocesses; ++i) {
+  for (int i = 0; i < nprocesses; ++i) {
     std::vector<std::string> cmd;
 
     //=================================================
@@ -24,9 +24,10 @@ int main() {
     //          - a number of messages to append
     //=================================================
     cmd.push_back("./system_logger_child");  // relative command path
-    // other arguments...
-    // cmd.push_back(...);
-
+    cmd.push_back("#" + std::to_string(i));
+    cmd.push_back(logfile);
+    cmd.push_back(std::to_string(nmessages));
+    processes.push_back(cmd);
   }
 
   // wait for processes to finish
