@@ -9,6 +9,16 @@
 
 #include "word_count.h"
 
+#define SEQUENTIAL 0
+
+long getDuration(std::chrono::time_point<std::__1::chrono::steady_clock, std::__1::chrono::nanoseconds> t1) {
+  auto t2 = std::chrono::high_resolution_clock::now();
+  auto duration = t2-t1;
+  auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
+  long ms = duration_ms.count();
+  return ms;
+}
+
 /**
  * Checks if the line specifies a character's dialogue, returning
  * the index of the start of the dialogue.  If the
@@ -119,10 +129,19 @@ void count_character_words(const std::string& filename,
  * @return true if p1 should come before p2, false otherwise
  */
 bool wc_greater_than(std::pair<std::string,int>& p1, std::pair<std::string,int>& p2) {
+  // compare counts
+  if (p1.second < p2.second) {
+    return true;
+  } else if (p1.second > p2.second) {
+    return false;
+  }
 
-  //===============================================
-  // YOUR IMPLEMENTATION HERE TO ORDER p1 AND p2
-  //===============================================
+  // counts are equal
+  if (p1.first < p2.first) {
+    return true;
+  } else if (p1.first > p2.first) {
+    return false;
+  }
 
   return false;
 };
@@ -167,13 +186,28 @@ int main() {
       "data/shakespeare_romeo_and_juliet.txt",
   };
 
+
   //=============================================================
   // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
   //=============================================================
+  if (SEQUENTIAL) {
+    auto t1 = std::chrono::high_resolution_clock::now();
+    for (std::string f : filenames) {
+      count_character_words(f, mutex, wcounts);
+    }
+    std::cout << "Sequential Duration: " << getDuration(t1) << " ms" << std::endl << std::endl;
+  } else {
+    int nthreads = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads;
+    
+    std::cout << "Begin counting...." << std::endl;
+    auto t1 = std::chrono::high_resolution_clock::now();
+    
+
+    std::cout << "Threaded Duration: " << getDuration(t1) << " ms" << std::endl << std::endl;
+  }
 
   auto sorted_wcounts = sort_characters_by_wordcount(wcounts);
-
-  // results
   for (const auto& entry : sorted_wcounts) {
     std::cout << entry.first << ", " << entry.second << std::endl;
   }
