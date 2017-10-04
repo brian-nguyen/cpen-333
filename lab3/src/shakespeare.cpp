@@ -9,8 +9,6 @@
 
 #include "word_count.h"
 
-#define SEQUENTIAL 0
-
 long getDuration(std::chrono::time_point<std::__1::chrono::steady_clock, std::__1::chrono::nanoseconds> t1) {
   auto t2 = std::chrono::high_resolution_clock::now();
   auto duration = t2-t1;
@@ -130,16 +128,16 @@ void count_character_words(const std::string& filename,
  */
 bool wc_greater_than(std::pair<std::string,int>& p1, std::pair<std::string,int>& p2) {
   // compare counts
-  if (p1.second < p2.second) {
+  if (p1.second > p2.second) {
     return true;
-  } else if (p1.second > p2.second) {
+  } else if (p1.second < p2.second) {
     return false;
   }
 
   // counts are equal
-  if (p1.first < p2.first) {
+  if (p1.first > p2.first) {
     return true;
-  } else if (p1.first > p2.first) {
+  } else if (p1.first < p2.first) {
     return false;
   }
 
@@ -190,6 +188,7 @@ int main() {
   //=============================================================
   // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
   //=============================================================
+  bool SEQUENTIAL = true;
   if (SEQUENTIAL) {
     auto t1 = std::chrono::high_resolution_clock::now();
     for (std::string f : filenames) {
@@ -202,7 +201,22 @@ int main() {
     
     std::cout << "Begin counting...." << std::endl;
     auto t1 = std::chrono::high_resolution_clock::now();
-    
+
+    for (std::string f : filenames) {
+      threads.push_back(std::thread(count_character_words, std::ref(f), std::ref(mutex), std::ref(wcounts)));
+      
+      if (threads.size() >= nthreads) {
+        for (int i = 0; i < nthreads; i++) {
+          threads[i].join();
+        }
+        threads.clear();
+      }
+    }
+
+    for (int i = 0; i < threads.size(); i++) {
+      threads[i].join();
+    }
+    threads.clear();
 
     std::cout << "Threaded Duration: " << getDuration(t1) << " ms" << std::endl << std::endl;
   }
