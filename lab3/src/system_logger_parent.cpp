@@ -23,8 +23,8 @@ int main() {
     //          - a log filename to append to
     //          - a number of messages to append
     //=================================================
-    cmd.push_back("./system_logger_child");  // relative command path
-    cmd.push_back("#" + std::to_string(i));
+    cmd.push_back("./system_logger_child.exe");  // relative command path
+    cmd.push_back("p#" + std::to_string(i));
     cmd.push_back(logfile);
     cmd.push_back(std::to_string(nmessages));
     processes.push_back(cmd);
