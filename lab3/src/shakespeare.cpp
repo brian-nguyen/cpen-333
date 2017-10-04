@@ -188,7 +188,7 @@ int main() {
   //=============================================================
   // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
   //=============================================================
-  bool SEQUENTIAL = true;
+  bool SEQUENTIAL = false;
   if (SEQUENTIAL) {
     auto t1 = std::chrono::high_resolution_clock::now();
     for (std::string f : filenames) {
@@ -202,7 +202,7 @@ int main() {
     std::cout << "Begin counting...." << std::endl;
     auto t1 = std::chrono::high_resolution_clock::now();
 
-    for (std::string f : filenames) {
+    for (std::string& f : filenames) {
       threads.push_back(std::thread(count_character_words, std::ref(f), std::ref(mutex), std::ref(wcounts)));
       
       if (threads.size() >= nthreads) {
