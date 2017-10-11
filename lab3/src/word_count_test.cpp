@@ -62,7 +62,7 @@ int main() {
     // one space
     wc_tester(" ", 0, 0);
     // extra whitespace between words
-    wc_tester("hello  world", 0, 2);
+    wc_tester("hello  $ %world", 0, 2);
     // only one word
     wc_tester("helloworld", 0, 1);
     // leading whitespace
