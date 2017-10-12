@@ -30,7 +30,7 @@ void load_maze(const std::string& filename, MazeInfo& minfo) {
         if (cols > minfo.cols) {
           minfo.cols = cols;
         }
-        for (size_t col=0; col<cols; ++col) {
+        for (size_t col = 0; col < cols; ++col) {
           minfo.maze[col][row] = line[col];
         }
         ++row;
@@ -55,7 +55,7 @@ void init_runners(const MazeInfo& minfo, RunnerInfo& rinfo) {
   std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
   std::uniform_int_distribution<size_t> rdist(0, minfo.rows);
   std::uniform_int_distribution<size_t> cdist(0, minfo.cols);
-  for (size_t i=0; i<MAX_RUNNERS; ++i) {
+  for (size_t i = 0; i < MAX_RUNNERS; ++i) {
     // generate until on an empty space
     size_t r,c;
     do {
@@ -75,19 +75,16 @@ int main(int argc, char* argv[]) {
     maze = argv[1];
   }
 
-  //===============================================================
-  //  TODO:  CREATE SHARED MEMORY AND INITIALIZE IT
-  //===============================================================
   cpen333::process::shared_object<SharedData> memory("lab4_maze_runner");
   load_maze(maze, memory->minfo);
   init_runners(memory->minfo, memory->rinfo);
+  memory->quit = false;
 
   std::cout << "Keep this running until you are done with the program." << std::endl << std::endl;
   std::cout << "Press ENTER to quit." << std::endl;
   std::cin.get();
 
-  //===============================================================
-  //  TODO:  INFORM OTHER PROCESSES TO QUIT
-  //===============================================================
+  memory->quit = true;
+  memory.unlink();
   return 0;
 }

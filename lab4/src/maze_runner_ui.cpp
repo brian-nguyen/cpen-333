@@ -37,7 +37,7 @@ class MazeUI {
     display_.set_cursor_visible(false);
 
     // initialize last known runner positions
-    for (size_t i=0; i<MAX_RUNNERS; ++i) {
+    for (size_t i = 0; i < MAX_RUNNERS; ++i) {
       lastpos_[i][COL_IDX] = -1;
       lastpos_[i][ROW_IDX] = -1;
     }
@@ -46,18 +46,24 @@ class MazeUI {
     exit_[COL_IDX] = -1;
     exit_[ROW_IDX] = -1;
 
-    //===========================================================
-    // TODO: SEARCH MAZE FOR EXIT LOCATION
-    //===========================================================
-
+    MazeInfo& minfo = memory_->minfo;
+    for (int i = 0; i < minfo.cols; i++) {
+      for (int j = 0; j < minfo.rows; j++) {
+        if (minfo.maze[i][j] == EXIT_CHAR) {
+          exit_[ROW_IDX] = i;
+          exit_[COL_IDX] = j;
+          break;
+        }
+      }
+    }
   }
 
   /**
    * Draws the maze itself
    */
   void draw_maze() {
-    static const char WALL = 219;  // WALL character, or change to 'X' if trouble printing
-    static const char EXIT = 176;  // EXIT character, or change to 'E' if trouble printing
+    static const char WALL = 'X';  // WALL character, or change to 'X' if trouble printing
+    static const char EXIT = 'E';  // EXIT character, or change to 'E' if trouble printing
 
     MazeInfo& minfo = memory_->minfo;
     RunnerInfo& rinfo = memory_->rinfo;
@@ -90,15 +96,14 @@ class MazeUI {
     RunnerInfo& rinfo = memory_->rinfo;
 
     // draw all runner locations
-    for (size_t i=0; i<rinfo.nrunners; ++i) {
-      char me = 'A'+i;
+    for (size_t i = 0; i < rinfo.nrunners; ++i) {
+      char me = 'A' + i;
       int newr = rinfo.rloc[i][ROW_IDX];
       int newc = rinfo.rloc[i][COL_IDX];
 
       // if not already at the exit...
       if (newc != exit_[COL_IDX] || newr != exit_[ROW_IDX]) {
-        if (newc != lastpos_[i][COL_IDX]
-            || newr != lastpos_[i][ROW_IDX]) {
+        if (newc != lastpos_[i][COL_IDX] || newr != lastpos_[i][ROW_IDX]) {
 
           // zero out last spot and update known location
           display_.set_cursor_position(YOFF+lastpos_[i][ROW_IDX], XOFF+lastpos_[i][COL_IDX]);
