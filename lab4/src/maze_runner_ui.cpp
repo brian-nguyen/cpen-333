@@ -10,10 +10,6 @@
 /**
  * Handles all drawing/memory synchronization for the
  * User Interface process
- * ====================================================
- *  TODO: ADD ANY NECESSARY MUTUAL EXCLUSION
- * ====================================================
- *
  */
 class MazeUI {
   // display offset for better visibility
@@ -96,6 +92,8 @@ class MazeUI {
     RunnerInfo& rinfo = memory_->rinfo;
 
     // draw all runner locations
+    // nrunners may change, so lock here
+    std::lock_guard<decltype(mutex_)> lock(mutex_);
     for (size_t i = 0; i < rinfo.nrunners; ++i) {
       char me = 'A' + i;
       int newr = rinfo.rloc[i][ROW_IDX];

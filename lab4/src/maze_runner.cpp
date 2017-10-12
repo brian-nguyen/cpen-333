@@ -6,6 +6,8 @@
 #include <chrono>
 #include <thread>
 
+#define TAKEN '*'
+
 class MazeRunner {
 
   cpen333::process::shared_object<SharedData> memory_;
@@ -44,22 +46,46 @@ class MazeRunner {
    * @return 1 for success, 0 for failure, -1 to quit
    */
   int go() {
-    // current location
+    if (memory_->quit) return -1;
+
     int c = loc_[COL_IDX];
     int r = loc_[ROW_IDX];
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // check if at exit
+    if (minfo_.maze[c][r] == EXIT_CHAR) return 1;
 
-    //==========================================================
-    // TODO: NAVIGATE MAZE
-    //==========================================================
+    if (minfo_.maze[c][r] == TAKEN) return 0;
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    // go right
+    if (c < minfo_.cols - 1 && (minfo_.maze[c + 1][r] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
+      loc_[COL_IDX] = c + 1;
+      memory_->rinfo.rloc[idx_][COL_IDX] = loc_[COL_IDX];
+      return go();
+    }
+    // go down
+    if (r < minfo_.rows && (minfo_.maze[c][r + 1] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
+      loc_[ROW_IDX] = r + 1;
+      memory_->rinfo.rloc[idx_][ROW_IDX] = loc_[ROW_IDX];
+      return go();
+    }
+    // go left
+    if (c > 0 && (minfo_.maze[c - 1][r] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
+      loc_[COL_IDX] = c - 1;
+      memory_->rinfo.rloc[idx_][COL_IDX] = loc_[COL_IDX];
+      return go();
+    } 
+    // go up
+    if (r > 0 && (minfo_.maze[c][r - 1] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
+      loc_[ROW_IDX] = r - 1;
+      memory_->rinfo.rloc[idx_][ROW_IDX] = loc_[ROW_IDX];
+      return go();
+    }
 
-    // failed to find exit
+    minfo_.maze[c][r] = EMPTY_CHAR;
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+
     return 0;
   }
-
 };
 
 int main() {
