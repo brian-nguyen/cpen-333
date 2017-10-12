@@ -51,47 +51,57 @@ class MazeRunner {
     int c = loc_[COL_IDX];
     int r = loc_[ROW_IDX];
 
-    // check if at exit
+    // update UI
+    memory_->rinfo.rloc[idx_][COL_IDX] = c;
+    memory_->rinfo.rloc[idx_][ROW_IDX] = r;
+
+    // success if exit reached
     if (minfo_.maze[c][r] == EXIT_CHAR) return 1;
 
-    if (minfo_.maze[c][r] == TAKEN) return 0;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-    // go right
+    // mark current position
+    minfo_.maze[c][r] = TAKEN;
+
+    // go right, if this results in a solution, return success
     if (c < minfo_.cols - 1 && (minfo_.maze[c + 1][r] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
       loc_[COL_IDX] = c + 1;
-      memory_->rinfo.rloc[idx_][COL_IDX] = loc_[COL_IDX];
-      return go();
+      if (go() == 1) return 1;
     }
-    // go down
-    if (r < minfo_.rows && (minfo_.maze[c][r + 1] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
-      loc_[ROW_IDX] = r + 1;
-      memory_->rinfo.rloc[idx_][ROW_IDX] = loc_[ROW_IDX];
-      return go();
-    }
+
     // go left
-    if (c > 0 && (minfo_.maze[c - 1][r] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
+    if (c > 0 && (minfo_.maze[c - 1][r] == EMPTY_CHAR || minfo_.maze[c - 1][r] == EXIT_CHAR)) {
       loc_[COL_IDX] = c - 1;
-      memory_->rinfo.rloc[idx_][COL_IDX] = loc_[COL_IDX];
-      return go();
-    } 
-    // go up
-    if (r > 0 && (minfo_.maze[c][r - 1] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
-      loc_[ROW_IDX] = r - 1;
-      memory_->rinfo.rloc[idx_][ROW_IDX] = loc_[ROW_IDX];
-      return go();
+      if (go() == 1) return 1;
     }
 
-    minfo_.maze[c][r] = EMPTY_CHAR;
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    // go down
+    if (r < minfo_.rows && (minfo_.maze[c][r + 1] == EMPTY_CHAR || minfo_.maze[c][r + 1] == EXIT_CHAR)) {
+      loc_[ROW_IDX] = r + 1;
+      if (go() == 1) return 1;
+    }
 
-    return 0;
+    // go up
+    if (r > 0 && (minfo_.maze[c][r - 1] == EMPTY_CHAR || minfo_.maze[c][r - 1] == EXIT_CHAR)) {
+      loc_[ROW_IDX] = r - 1;
+      if (go() == 1) return 1;
+    }
+
+    // no solution found, backtrack
+    minfo_.maze[c][r] = EMPTY_CHAR;
+
+    // update UI
+    memory_->rinfo.rloc[idx_][COL_IDX] = c;
+    memory_->rinfo.rloc[idx_][ROW_IDX] = r;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    return memory_->quit ? -1 : 0;
   }
 };
 
 int main() {
 
   MazeRunner runner;
-  runner.go();
+  std::printf("Result: %d\n", runner.go());
 
   return 0;
 }
