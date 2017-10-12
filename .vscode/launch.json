@@ -88,6 +88,26 @@
                 "externalConsole": false,
                 "MIMode": "lldb",
                 "preLaunchTask": "lab3/shakespeare"
+            },
+            {
+                "name": "Lab4/MazeMain",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab4/bin/maze_runner_main",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb"
+            },
+            {
+                "name": "Lab4/MazeUI",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab4/bin/maze_runner_ui",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb"
             }
         ]
     }
