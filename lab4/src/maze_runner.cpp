@@ -64,25 +64,29 @@ class MazeRunner {
     minfo_.maze[c][r] = TAKEN;
 
     // go right, if this results in a solution, return success
-    if (c < minfo_.cols - 1 && (minfo_.maze[c + 1][r] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
+    if (c < minfo_.cols && (minfo_.maze[c + 1][r] == EMPTY_CHAR || minfo_.maze[c + 1][r] == EXIT_CHAR)) {
       loc_[COL_IDX] = c + 1;
+      loc_[ROW_IDX] = r;
       if (go() == 1) return 1;
     }
 
     // go left
-    if (c > 0 && (minfo_.maze[c - 1][r] == EMPTY_CHAR || minfo_.maze[c - 1][r] == EXIT_CHAR)) {
+    if (c >= 0 && (minfo_.maze[c - 1][r] == EMPTY_CHAR || minfo_.maze[c - 1][r] == EXIT_CHAR)) {
       loc_[COL_IDX] = c - 1;
+      loc_[ROW_IDX] = r;
       if (go() == 1) return 1;
     }
 
     // go down
     if (r < minfo_.rows && (minfo_.maze[c][r + 1] == EMPTY_CHAR || minfo_.maze[c][r + 1] == EXIT_CHAR)) {
+      loc_[COL_IDX] = c;
       loc_[ROW_IDX] = r + 1;
       if (go() == 1) return 1;
     }
 
     // go up
-    if (r > 0 && (minfo_.maze[c][r - 1] == EMPTY_CHAR || minfo_.maze[c][r - 1] == EXIT_CHAR)) {
+    if (r >= 0 && (minfo_.maze[c][r - 1] == EMPTY_CHAR || minfo_.maze[c][r - 1] == EXIT_CHAR)) {
+      loc_[COL_IDX] = c;
       loc_[ROW_IDX] = r - 1;
       if (go() == 1) return 1;
     }
