@@ -108,6 +108,16 @@
                 "cwd": "${workspaceRoot}",
                 "externalConsole": false,
                 "MIMode": "lldb"
+            },
+            {
+                "name": "Lab4/MazeRunner",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab4/bin/maze_runner",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb"
             }
         ]
     }
