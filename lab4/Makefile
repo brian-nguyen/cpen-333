@@ -14,7 +14,7 @@ runner:
 	$(CC) $(CFLAGS) -o ./bin/maze_runner ./src/maze_runner.cpp
 
 malware:
-	$(CC) $(CLAGS) -o ./bin/malware ./src/malware.cpp
+	$(CC) $(CFLAGS) -o ./bin/malware ./src/malware.cpp
 
 clean:
 	rm -r ./bin/*
