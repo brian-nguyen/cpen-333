@@ -24,7 +24,13 @@ class MazeRunner {
 
   MazeRunner() : memory_(MAZE_MEMORY_NAME), mutex_(MAZE_MUTEX_NAME),
                  minfo_(), idx_(0), loc_() {
-
+    {
+      std::lock_guard<decltype(mutex_)> lock(mutex_);
+      if (memory_->magic != MAGIC_NUM) {
+        std::cout << "Memory not initialized" << std::endl;
+        return;
+      }
+    }
     // copy maze contents
     minfo_ = memory_->minfo;
 
@@ -58,7 +64,7 @@ class MazeRunner {
     // success if exit reached
     if (minfo_.maze[c][r] == EXIT_CHAR) return 1;
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
     // mark current position
     minfo_.maze[c][r] = TAKEN;
@@ -97,7 +103,7 @@ class MazeRunner {
     // update UI
     memory_->rinfo.rloc[idx_][COL_IDX] = c;
     memory_->rinfo.rloc[idx_][ROW_IDX] = r;
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     return memory_->quit ? -1 : 0;
   }
 };

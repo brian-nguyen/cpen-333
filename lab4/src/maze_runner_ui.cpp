@@ -26,7 +26,14 @@ class MazeUI {
 
  public:
 
-  MazeUI() : display_(), memory_(MAZE_MEMORY_NAME), mutex_(MAZE_MUTEX_NAME){
+  MazeUI() : display_(), memory_(MAZE_MEMORY_NAME), mutex_(MAZE_MUTEX_NAME) {
+    {
+      std::lock_guard<decltype(mutex_)> lock(mutex_);
+      if (memory_->magic != MAGIC_NUM) {
+        std::cout << "Memory not initialized" << std::endl;
+        return;
+      }
+    }
 
     // clear display and hide cursor
     display_.clear_all();

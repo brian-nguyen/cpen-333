@@ -78,13 +78,16 @@ int main(int argc, char* argv[]) {
   cpen333::process::shared_object<SharedData> memory("lab4_maze_runner");
   load_maze(maze, memory->minfo);
   init_runners(memory->minfo, memory->rinfo);
+  memory->magic = MAGIC_NUM;
   memory->quit = false;
 
   std::cout << "Keep this running until you are done with the program." << std::endl << std::endl;
   std::cout << "Press ENTER to quit." << std::endl;
   std::cin.get();
 
+  memory->magic = 0;
   memory->quit = true;
+
   memory.unlink();
   return 0;
 }
