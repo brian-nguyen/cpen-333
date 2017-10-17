@@ -109,9 +109,21 @@ class JsonConverter {
     return j;
   }
 
-  //======================================================
-  // TODO: Convert "remove" and response message to JSON
-  //======================================================
+  static JSON toJSON(const RemoveMessage &remove) {
+    JSON j;
+    j[MESSAGE_TYPE] = MESSAGE_REMOVE;
+    j[MESSAGE_SONG] = toJSON(remove.song);
+    return j;
+  }
+
+  static JSON toJSON(const RemoveResponseMessage &remove_response) {
+    JSON j;
+    j[MESSAGE_TYPE] = MESSAGE_REMOVE_RESPONSE;
+    j[MESSAGE_STATUS] = remove_response.status;
+    j[MESSAGE_INFO] = remove_response.info;
+    j[MESSAGE_REMOVE] = toJSON(remove_response.remove);
+    return j;
+  }
 
   /**
    * Converts a "search" message to a JSON object
@@ -152,17 +164,15 @@ class JsonConverter {
     return j;
   }
 
+
+
   /**
    * Converts a message to a JSON object, automatically detecting the type
    * @param message
    * @return JSON object representation, {"status"="ERROR", "info"=...} if not recognized
    */
   static JSON toJSON(const Message &msg) {
-
-    //=============================================================
-    // TODO: Convert "remove" and its response to JSON
-    //=============================================================
-
+    
     switch(msg.type()) {
       case ADD: {
         return toJSON((AddMessage &) msg);
@@ -178,6 +188,12 @@ class JsonConverter {
       }
       case GOODBYE: {
         return toJSON((GoodbyeMessage &) msg);
+      }
+      case REMOVE: {
+        return toJSON((RemoveMessage &) msg);
+      }
+      case REMOVE_RESPONSE: {
+        return toJSON((RemoveResponseMessage &) msg);
       }
       default: {
 
