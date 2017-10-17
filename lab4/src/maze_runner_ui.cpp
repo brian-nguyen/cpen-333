@@ -100,11 +100,16 @@ class MazeUI {
 
     // draw all runner locations
     // nrunners may change, so lock here
-    std::lock_guard<decltype(mutex_)> lock(mutex_);
     for (size_t i = 0; i < rinfo.nrunners; ++i) {
       char me = 'A' + i;
-      int newr = rinfo.rloc[i][ROW_IDX];
-      int newc = rinfo.rloc[i][COL_IDX];
+      int newr;
+      int newc;
+
+      {
+        std::lock_guard<decltype(mutex_)> lock(mutex_);
+        newr = rinfo.rloc[i][ROW_IDX];
+        newc = rinfo.rloc[i][COL_IDX];
+      }
 
       // if not already at the exit...
       if (newc != exit_[COL_IDX] || newr != exit_[ROW_IDX]) {
