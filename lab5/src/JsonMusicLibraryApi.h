@@ -138,10 +138,11 @@ class JsonMusicLibraryApi : public MusicLibraryApi {
       return false;
     }
 
-    //=================================================
-    // TODO: Decode 4-byte big-endian integer size
-    //=================================================
     int size = 0;
+    for (int i = 0; i < 4; i++) {
+      size <<= 1;
+      size |= buff[i];
+    }
 
     // read entire JSON string
     std::string str;
