@@ -40,7 +40,8 @@
         "__locale": "cpp",
         "__nullptr": "cpp",
         "locale": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "__mutex_base": "cpp"
     },
     "C_Cpp.intelliSenseEngine": "Default"
 }

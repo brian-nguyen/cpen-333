@@ -146,6 +146,7 @@ int main() {
           std::cout << "Invalid command number " << cmd << std::endl << std::endl;
       }
 
+      cpen333::pause();
     }
   } else {
     std::cout << "failed." << std::endl;

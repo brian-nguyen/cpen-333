@@ -169,6 +169,7 @@ int main() {
 
   int id = 0;
   cpen333::process::socket client;
+  std::mutex mutex;
   while (true) {
     if (server.accept(client)) {
       // create API handler
@@ -176,7 +177,6 @@ int main() {
 
       // service client-server communication
       // service(lib, std::move(api), id);
-      std::mutex mutex;
       std::thread thread(service, std::ref(mutex), std::ref(lib), std::move(api), id);
       thread.detach();
 
