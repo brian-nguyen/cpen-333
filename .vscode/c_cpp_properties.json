@@ -9,6 +9,7 @@
                 "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include",
                 "/usr/include",
                 "/Users/jaeharys/cpen333/include",
+                "/Users/jaeharys/OneDrive/UBC/4th Year/CPEN 333/labs/lab5/include",
                 "${workspaceRoot}"
             ],
             "defines": [],
