@@ -41,7 +41,8 @@
         "__nullptr": "cpp",
         "locale": "cpp",
         "thread": "cpp",
-        "__mutex_base": "cpp"
+        "__mutex_base": "cpp",
+        "deque": "cpp"
     },
     "C_Cpp.intelliSenseEngine": "Default"
 }

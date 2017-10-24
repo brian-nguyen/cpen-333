@@ -1,6 +1,7 @@
 {
         "version": "0.2.0",
         "configurations": [
+
             {
                 "name": "Lab1/Highway",
                 "type": "cppdbg",
@@ -116,6 +117,26 @@
                 "program": "${workspaceRoot}/lab4/bin/maze_runner",
                 "stopAtEntry": true,
                 "cwd": "${workspaceRoot}",
+                "externalConsole": false,
+                "MIMode": "lldb"
+            },
+            {
+                "name": "Lab5/MusicServer",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab5/bin/music_library_server",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}/lab5",
+                "externalConsole": false,
+                "MIMode": "lldb"
+            },
+            {
+                "name": "Lab5/MusicClient",
+                "type": "cppdbg",
+                "request": "launch",
+                "program": "${workspaceRoot}/lab5/bin/music_library_client",
+                "stopAtEntry": true,
+                "cwd": "${workspaceRoot}/lab5",
                 "externalConsole": false,
                 "MIMode": "lldb"
             }
