@@ -78,10 +78,6 @@ class AddResponseMessage : public ResponseMessage {
   }
 };
 
-//=======================================================
-// TODO: Create RemoveMessage and RemoveMessageResponse
-//=======================================================
-
 /**
  * Remove a song from the library
  */

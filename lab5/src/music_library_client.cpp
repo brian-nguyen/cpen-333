@@ -71,6 +71,7 @@ void do_remove(MusicLibraryApi &api) {
   //=================================================
   // TODO: Implement "remove" functionality
   //=================================================
+  std::string artist, title;
   
 }
 

@@ -96,7 +96,6 @@ class JsonMusicLibraryApi : public MusicLibraryApi {
       buff[i] = (char)(size & 0xFF);
       size = size >> 8;
     }
-
     // write contents
     bool success  = socket_.write(buff, 4);   // contents size
     success &= socket_.write(jsonstr);        // contents
@@ -111,26 +110,22 @@ class JsonMusicLibraryApi : public MusicLibraryApi {
    * @return true if successful
    */
   bool readString(std::string& str, size_t size) {
+    bool success = false;
     char cbuff[256];
 
-    for (int i = 0; i < (size / 256); i++) {
-      if (!socket_.read_all(cbuff, 256)) return false;
-
-      for (int j = 0; j < 256; j++) {
-        str.push_back(cbuff[j]);
-      }
+    if (socket_.read_all(cbuff, 256)) {
+      str.append(cbuff);
+      success = true;
     }
     
     int last_chunk = size % 256;
-    for (int i = 0; i < last_chunk; i++) {
-      if (!socket_.read_all(cbuff, last_chunk)) return false;
-
-      for (int j = 0; j < last_chunk; j++) {
-        str.push_back(cbuff[j]);
-      }
+    if (last_chunk > 0) success = false;
+    if (socket_.read_all(cbuff, last_chunk)) {
+      str.append(cbuff);
+      success = true;
     }
 
-    return true;
+    return success;
   }
 
   /**
@@ -151,7 +146,7 @@ class JsonMusicLibraryApi : public MusicLibraryApi {
 
     int size = 0;
     for (int i = 0; i < 4; i++) {
-      size <<= 1;
+      size <<= 8;
       size |= buff[i];
     }
 

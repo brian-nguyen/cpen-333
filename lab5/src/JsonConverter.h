@@ -233,7 +233,7 @@ class JsonConverter {
   }
 
   /**
-   * Converts a JSON object representing an AddMessage to a AddMessage object
+   * Converts a JSON object representing an AddMessage to an AddMessage object
    * @param j JSON object
    * @return AddMessage
    */
@@ -254,9 +254,27 @@ class JsonConverter {
     return AddResponseMessage(add, status, info);
   }
 
-  //======================================================
-  // TODO: Parse "remove" and response message from JSON
-  //======================================================
+  /**
+   * Converts a JSON object representing a RemoveMessage to a RemoveMessage object
+   * @param j JSON object
+   * @return RemoveMessage
+   */
+  static RemoveMessage parseRemove(const JSON &jremove) {
+    Song song = parseSong(jremove[MESSAGE_SONG]);
+    return RemoveMessage(song); 
+  }
+
+  /**
+   * Converts a JSON object representing an RemoveResponseMessage to a RemoveResponseMessage object
+   * @param j JSON object
+   * @return RemoveResponseMessage
+   */
+  static RemoveResponseMessage parseRemoveResponse(const JSON &jremover) {
+    RemoveMessage r = parseRemove(jremover[MESSAGE_REMOVE]);
+    std::string status = jremover[MESSAGE_STATUS];
+    std::string info = jremover[MESSAGE_INFO];
+    return RemoveResponseMessage(r, status, info);
+  }
 
   /**
    * Converts a JSON object representing a SearchMessage to a SearchMessage object
@@ -324,11 +342,6 @@ class JsonConverter {
    * @return parsed Message object, or nullptr if invalid
    */
   static std::unique_ptr<Message> parseMessage(const JSON &jmsg) {
-
-    //=============================================================
-    // TODO: Add parsing of "remove" and its response
-    //=============================================================
-
     MessageType type = parseType(jmsg);
     switch(type) {
       case ADD: {
@@ -336,6 +349,12 @@ class JsonConverter {
       }
       case ADD_RESPONSE: {
         return std::unique_ptr<Message>(new AddResponseMessage(parseAddResponse(jmsg)));
+      }
+      case REMOVE: {
+        return std::unique_ptr<Message>(new RemoveMessage(parseRemove(jmsg)));
+      }
+      case REMOVE_RESPONSE: {
+        return std::unique_ptr<Message>(new RemoveResponseMessage(parseRemoveResponse(jmsg)));        
       }
       case SEARCH: {
         return std::unique_ptr<Message>(new SearchMessage(parseSearch(jmsg)));
@@ -345,6 +364,9 @@ class JsonConverter {
       }
       case GOODBYE: {
         return std::unique_ptr<Message>(new GoodbyeMessage(parseGoodbye(jmsg)));
+      }
+      default: {
+        
       }
     }
 
