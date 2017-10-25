@@ -110,22 +110,24 @@ class JsonMusicLibraryApi : public MusicLibraryApi {
    * @return true if successful
    */
   bool readString(std::string& str, size_t size) {
-    bool success = false;
     char cbuff[256];
 
-    if (socket_.read_all(cbuff, 256)) {
+    for (int i = 0; i < (size / 256); i++) {
+      if (!socket_.read_all(cbuff, 256)) {
+        return false;
+      }
       str.append(cbuff);
-      success = true;
     }
     
     int last_chunk = size % 256;
-    if (last_chunk > 0) success = false;
-    if (socket_.read_all(cbuff, last_chunk)) {
+    if (last_chunk > 0) {
+      if (!socket_.read_all(cbuff, last_chunk)) {
+        return false;
+      }
       str.append(cbuff);
-      success = true;
     }
 
-    return success;
+    return true;
   }
 
   /**
