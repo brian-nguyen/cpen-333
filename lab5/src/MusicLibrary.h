@@ -54,6 +54,7 @@ class MusicLibrary {
    */
   bool remove(const Song& song) {
     size_t removed = songs_.erase(song);
+    std::cout << "Removed: " << removed << std::endl;
     return removed > 0;
   }
 
