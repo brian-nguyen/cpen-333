@@ -137,7 +137,7 @@
                 "program": "${workspaceRoot}/lab5/bin/music_library_client",
                 "stopAtEntry": true,
                 "cwd": "${workspaceRoot}/lab5",
-                "externalConsole": false,
+                "externalConsole": true,
                 "MIMode": "lldb"
             }
         ]
