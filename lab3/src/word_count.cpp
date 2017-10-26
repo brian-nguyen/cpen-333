@@ -14,7 +14,7 @@ int word_count(const std::string& line, int start_idx) {
   int nwords = 0;
   int i = start_idx;
   while (i < length) {
-    if (is_space && line[i] != ' ') {
+    if (is_space && (line[i] >= 'A' && line[i] <= 'z')) {
       is_space = false;
       nwords++;
     } else if (line[i] == ' ') {
