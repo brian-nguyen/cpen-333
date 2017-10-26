@@ -91,7 +91,8 @@ class JsonMusicLibraryApi : public MusicLibraryApi {
     //   (most-significant byte in buff[0])
     char buff[4];
     size_t size = jsonstr.size()+1;           // one for terminating zero
-    for (int i=4; i-->0;) {
+    std::cout << "Sending: " << size << std::endl;
+    for (int i = 4; i-- > 0;) {
       // cut off byte and shift size over by 8 bits
       buff[i] = (char)(size & 0xFF);
       size = size >> 8;
@@ -146,12 +147,14 @@ class JsonMusicLibraryApi : public MusicLibraryApi {
       return false;
     }
 
-    int size = 0;
+    size_t size = 0;
     for (int i = 0; i < 4; i++) {
       size <<= 8;
-      size |= buff[i];
+      size |= ((size_t)buff[i] & 0xFF);
     }
+    std::cout << std::endl;
 
+    std::cout << "Received: " << size << std::endl;
     // read entire JSON string
     std::string str;
     if (!readString(str, size)) {
