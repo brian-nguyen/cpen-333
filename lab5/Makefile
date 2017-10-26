@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -std=c++11 -I/Users/jaeharys/cpen333/include -I/Users/jaeharys/OneDrive/UBC/4th\ Year/CPEN\ 333/labs/lab5/include
+CFLAGS = -g -std=c++11 -I/Users/jaeharys/cpen333/include -I./include
 
 .PHONY: music test clean
 
