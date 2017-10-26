@@ -26,7 +26,7 @@
  * @param api communication interface layer
  * @param id client id for printing messages to the console
  */
-void service(MusicLibrary &lib, MusicLibraryApi &&api, int id) {
+void service(std::mutex &mutex, MusicLibrary &lib, MusicLibraryApi &&api, int id) {
   std::cout << "Client " << id << " connected" << std::endl;
 
   // receive message
@@ -46,10 +46,10 @@ void service(MusicLibrary &lib, MusicLibraryApi &&api, int id) {
 
         // add song to library
         bool success = false;
-        // {
-          // std::lock_guard<decltype(mutex)> lock(mutex);
+        {
+          std::lock_guard<decltype(mutex)> lock(mutex);
           success = lib.add(add.song);
-        // }
+        }
 
         // send response
         if (success) {
@@ -66,10 +66,10 @@ void service(MusicLibrary &lib, MusicLibraryApi &&api, int id) {
         std::cout << "Client " << id << " removing song: " << remove.song << std::endl;
 
         bool success = false;
-        // {
-        //   std::lock_guard<decltype(mutex)> lock(mutex);
-          success = lib.add(remove.song);
-        // }
+        {
+          std::lock_guard<decltype(mutex)> lock(mutex);
+          success = lib.remove(remove.song);
+        }
 
         if (success) {
           api.sendMessage(RemoveResponseMessage(remove, MESSAGE_STATUS_OK));
@@ -88,10 +88,10 @@ void service(MusicLibrary &lib, MusicLibraryApi &&api, int id) {
 
         // search library
         std::vector<Song> results;
-        // {
-        //   std::lock_guard<decltype(mutex)> lock(mutex);
+        {
+          std::lock_guard<decltype(mutex)> lock(mutex);
           results = lib.find(search.artist_regex, search.title_regex);
-        // }
+        }
 
         // send response
         api.sendMessage(SearchResponseMessage(search, results, MESSAGE_STATUS_OK));
@@ -172,7 +172,7 @@ int main() {
 
       // service client-server communication
       // service(lib, std::move(api), id);
-      std::thread thread(service, std::ref(lib), std::move(api), id);
+      std::thread thread(service, std::ref(mutex), std::ref(lib), std::move(api), id);
       thread.detach();
 
       id++;
