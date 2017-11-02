@@ -34,7 +34,7 @@ class CircularOrderQueue : public virtual OrderQueue {
   void add(const Order& order) {
     producer_.wait();
     {
-      std::lock_guard(decltype(pmutex_));
+      std::lock_guard(decltype(pmutex_)) lock(pmutex_);
       int pidx = pidx_;
       pidx_ = (pidx_ + 1) % CIRCULAR_BUFF_SIZE;
       buff_[pidx] = order;
@@ -45,9 +45,9 @@ class CircularOrderQueue : public virtual OrderQueue {
   Order get() {
     consumer_.wait();
     {
-      std::lock_guard(decltype(cmutex_));
+      std::lock_guard(decltype(cmutex_)) lock(cmutex_);
       int cidx = cidx_;
-      cidx_ = (cidx_ + 1 ) % CIRCULAR_BUFF_SIZE;
+      cidx_ = (cidx_ + 1) % CIRCULAR_BUFF_SIZE;
       Order out = buff_[cidx];
     }
     producer_.notify();
