@@ -8,6 +8,7 @@
 
 #include "safe_printf.h"
 
+int NUM_MEALS = 2;
 /**
  * Customers place orders into a queue, wait for them to be
  * served, eat, then leave
@@ -84,12 +85,10 @@ class Customer : public cpen333::thread::thread_object {
       queue_.add({id_, meal.id});
     }
 
-    //==================================================
-    // TODO: wait for meals to be served
-    //==================================================
-    served_.wait();
-    served_.wait();
-    safe_printf("Customer %d ate both meals\n", id_);
+    for (int i = 0; i < NUM_MEALS; i++) {
+      served_.wait();
+    }
+    safe_printf("Customer %d ate all meals\n", id_);
 
     // stay for some time
     std::this_thread::sleep_for(std::chrono::seconds(5));
