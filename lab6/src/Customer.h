@@ -8,7 +8,6 @@
 
 #include "safe_printf.h"
 
-int NUM_MEALS = 2;
 /**
  * Customers place orders into a queue, wait for them to be
  * served, eat, then leave
@@ -42,10 +41,6 @@ class Customer : public cpen333::thread::thread_object {
    * @param order order that is complete
    */
   void serve(const Order& order) {
-
-    //==================================================
-    // TODO: Notify main method that order is ready
-    //==================================================
     served_.notify();
   }
 
@@ -85,7 +80,7 @@ class Customer : public cpen333::thread::thread_object {
       queue_.add({id_, meal.id});
     }
 
-    for (int i = 0; i < NUM_MEALS; i++) {
+    for (int i = 0; i < items; i++) {
       served_.wait();
     }
     safe_printf("Customer %d ate all meals\n", id_);
