@@ -43,14 +43,11 @@ class Server : public cpen333::thread::thread_object {
    * @return 0 when complete
    */
   int main() {
-
     safe_printf("Server %d started\n", id_);
 
-    //==================================================
-    // TODO: Detect when it's time to exit loop
-    //==================================================
     Order order = queue_.get();
     while (true) {
+      if (order.poison) break;
 
       // serve order
       safe_printf("Server %d serving {%d,%d}\n", id_, order.customer_id, order.item_id);

@@ -69,10 +69,10 @@ int main() {
     chef->join();
   }
   safe_printf("All chefs have left\n");
-  
-  //==================================================
-  // TODO: Signal all servers to leave
-  //==================================================
+
+  for (int i = 0; i < nservers; i++) {
+    serve_queue.add(poison);
+  }
 
   // wait for all servers to leave
   for (auto& server : servers) {

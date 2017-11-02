@@ -38,12 +38,8 @@ class Chef : public cpen333::thread::thread_object {
    * @return 0 if completed
    */
   int main() {
-
     safe_printf("Chef %d started\n", id_);
-
-    //==================================================
-    // TODO: Detect when it's time to exit loop
-    //==================================================
+    
     Order order = orders_.get();
     while (true) {
       if (order.poison) break;
