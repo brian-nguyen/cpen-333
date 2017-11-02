@@ -23,14 +23,12 @@ int main() {
   const int nservers = 2;
   const int ncustomers = 30;
 
-  //============================================
-  // TODO: Change queue types to test all three
-  //    - SingleOrderQueue
-  //    - CircularOrderQueue
-  //    - DynamicOrderQueue
-  //============================================
-  SingleOrderQueue order_queue;
-  SingleOrderQueue serve_queue;
+  // SingleOrderQueue order_queue;
+  // SingleOrderQueue serve_queue;
+  // CircularOrderQueue order_queue;
+  // CircularOrderQueue serve_queue;
+  DynamicOrderQueue order_queue;
+  DynamicOrderQueue serve_queue;
 
   for (int i=0; i<nchefs; ++i) {
     chefs.push_back(new Chef(i, order_queue, serve_queue));
@@ -59,7 +57,7 @@ int main() {
   for (auto& customer : customers) {
     customer->join();
   }
-
+  safe_printf("All customers have left\n");
   //==================================================
   // TODO: Signal all chefs to leave
   //==================================================
@@ -68,7 +66,8 @@ int main() {
   for (auto& chef : chefs) {
     chef->join();
   }
-
+  safe_printf("All chefs have left\n");
+  
   //==================================================
   // TODO: Signal all servers to leave
   //==================================================
@@ -77,7 +76,8 @@ int main() {
   for (auto& server : servers) {
     server->join();
   }
-
+  safe_printf("All servers have left\n");
+  
   // free all memory
   for (auto& customer : customers) {
     delete customer;

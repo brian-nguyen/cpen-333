@@ -89,6 +89,7 @@ class Customer : public cpen333::thread::thread_object {
     //==================================================
     served_.wait();
     served_.wait();
+    safe_printf("Customer %d ate both meals\n", id_);
 
     // stay for some time
     std::this_thread::sleep_for(std::chrono::seconds(5));
