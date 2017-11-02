@@ -24,20 +24,16 @@ class DynamicOrderQueue : public virtual OrderQueue {
       buff_(), mutex_(), cv_(){}
 
   void add(const Order& order) {
-    {
-      std::lock_guard(decltype(mutex_)) lock(mutex_);
-      buff_.push_back(order);
-    }
+    std::lock_guard<decltype(mutex_)> lock(mutex_);
+    buff_.push_back(order);
     cv_.notify_one();
   }
 
   Order get() {
-    {
-      std::lock_guard(decltype(mutex_)) lock(mutex_);
-      cv.wait(lock, [&](){ return !buff_.empty() })      
-      Order out = buff_.front();
-      buff_.pop_front();
-    }
+    std::unique_lock<decltype(mutex_)> lock(mutex_);
+    cv_.wait(lock, [&](){ return !buff_.empty(); });    
+    Order out = buff_.front();
+    buff_.pop_front();
     return out;
   }
 };

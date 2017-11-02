@@ -13,6 +13,7 @@
  * served, eat, then leave
  */
 class Customer : public cpen333::thread::thread_object {
+  cpen333::thread::semaphore served_;
   OrderQueue& queue_;
   Menu& menu_;
   int id_;
@@ -25,7 +26,7 @@ class Customer : public cpen333::thread::thread_object {
    * @param queue queue to place order into
    */
   Customer(int id, Menu& menu, OrderQueue& queue) :
-      id_(id), menu_(menu), queue_(queue) {}
+      id_(id), menu_(menu), queue_(queue), served_(0) {}
 
   /**
    * Unique customer id
@@ -44,7 +45,7 @@ class Customer : public cpen333::thread::thread_object {
     //==================================================
     // TODO: Notify main method that order is ready
     //==================================================
-
+    served_.notify();
   }
 
   /**
@@ -86,6 +87,8 @@ class Customer : public cpen333::thread::thread_object {
     //==================================================
     // TODO: wait for meals to be served
     //==================================================
+    served_.wait();
+    served_.wait();
 
     // stay for some time
     std::this_thread::sleep_for(std::chrono::seconds(5));
