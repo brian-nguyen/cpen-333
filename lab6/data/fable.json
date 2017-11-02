@@ -1,0 +1,146 @@
+[
+  {
+    "item": "Maple Roasted Carrots",
+    "description": "Almond cheese, funnel, poppy seeds",
+    "price": 16,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 2001
+  },
+  {
+    "item": "Tomato Soup",
+    "description": "Little grilled cheese w/ onion jam and spinach",
+    "price": 9,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 2002
+  },
+  {
+    "item": "Chickpea Fritters",
+    "description": "Pickled red onion, shoots, curry, mayo",
+    "price": 11,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 2003
+  },
+  {
+    "item": "Octopus",
+    "description": "Chorizo, chimichurri yogurt, cucumber",
+    "price": 18,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 2004
+  },
+  {
+    "item": "Spaghetti and Meat Ball",
+    "description": "Duck meat ball, tagliatelle, mushrooms",
+    "price": 11,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 2005
+  },
+  {
+    "item": "Heirloom Tomato & Burrata",
+    "description": "Garlic tuile, shallot vinaigrette, basil",
+    "price": 19,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 2006
+  },
+  {
+    "item": "The Best \"Canned Tuna\"",
+    "description": "Fable's canned tuna",
+    "price": 13,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 2007
+  },
+  {
+    "item": "Slow Cooked Salmon",
+    "description": "Roasted zucchini, ricotta, nuts, seeds",
+    "price": 27,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 2008
+  },
+  {
+    "item": "Puttanesca Poached Halibut",
+    "description": "Anchovies, rouille, sourdough",
+    "price": 32,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 2009
+  },
+  {
+    "item": "Pea Gnocchi",
+    "description": "Pea puree, parmesan, burnt onion powder",
+    "price": 22,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 2010
+  },
+  {
+    "item": "Butcher's Cut",
+    "description": "Potato Pavé, broccolini, roasted shallots",
+    "price": 32,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 2011
+  },
+  {
+    "item": "Smoked Duck Breast",
+    "description": "Brown butter hollandaise, walnuts, brussels",
+    "price": 27,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 2012
+  },
+  {
+    "item": "Scallop & Pork Belly",
+    "description": "Kale, pumpkin seed hummus, pickled mushroom",
+    "price": 29,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 2013
+  },
+  {
+    "item": "Rutabaga \"Tagliatelle\"",
+    "description": "Mushroom Bolognese, fresh parmesan",
+    "price": 20,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 2014
+  },
+  {
+    "item": "Milk Chocolate Panna Cotta",
+    "description": "Rasberry caviar, oreo crumb",
+    "price": 10,
+    "meal": "dinner",
+    "course": "dessert",
+    "item_id": 2015
+  },
+  {
+    "item": "Lemon Meringue Parfait",
+    "description": "London Fog ice cream, streusel",
+    "price": 12,
+    "meal": "dinner",
+    "course": "dessert",
+    "item_id": 2016
+  },
+  {
+    "item": "BC Strawberry \"Shortcake\"",
+    "description": "Strawberry textures, BP scone, ice cream",
+    "price": 12,
+    "meal": "dinner",
+    "course": "dessert",
+    "item_id": 2017
+  },
+  {
+    "item": "Canadian Cheese Plate (3)",
+    "description": "",
+    "price": 14,
+    "meal": "dinner",
+    "course": "dessert",
+    "item_id": 2018
+  }
+]

@@ -1,0 +1,130 @@
+[
+  {
+    "item": "Soup",
+    "description": "Ever-Evolving Assortment Of The Freshest Ingredients Available",
+    "price": 11,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 1001
+  },
+  {
+    "item": "Eggplant",
+    "description": "Roasted Eggplant + Horseradish Cashew Pate, Purple Sauerkraut, Pickled Mustard Seeds, Shaved Horseradish, Taro Chips",
+    "price": 13,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 1002
+  },
+  {
+    "item": "Mushroom",
+    "description": "Kelp Salt Roasted King Oyster Mushrooms, Confit Wild Garlic, Smoked Onion Kelp Sauce, Leeks, Sea Asparagus",
+    "price": 13,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 1003
+  },
+  {
+    "item": "Zucchini",
+    "description": "Shaved Zucchini Salad, Yarrow Vinaigrette, Puff Pastry, Cured Zucchini + Walnut Mousse, Ash Ripened Goat Cheese, BC Cherry Puree, Garlic Scape Relish",
+    "price": 13,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 1004
+  },
+  {
+    "item": "Legume",
+    "description": "Mixed Heirloom Beans, Lemon + Caper Mayo, Salted Ricotta, Mustard Greens, Maple Blossom Vinaigrette, Juniper Cured Farm Egg Yolk, Pickled Pearl Onion",
+    "price": 14,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 1005
+  },
+  {
+    "item": "Cucumber",
+    "description": "Sumac Lemon Dressed Snap Peas, Cucumber Cashew Créme Fraiche, Wild Greens, Pickled Cucumber, Shaved Hazelnut",
+    "price": 13,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 1006
+  },
+  {
+    "item": "Kale",
+    "description": "Kale Salad, Tempeh, Smoked Paprika Croutons, Crispy Capers, Kootenay Nostrala Cheese, Black Olives, Caesar Dressing",
+    "price": 13,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 1007
+  },
+  {
+    "item": "Panzanella",
+    "description": "Klippers Organic Heirloom Tomatoes, Toasted Focaccia, Arugula, Basil Vinaigrette, Lemon Basil Puree, Sunflower Seed Paprika Crumb",
+    "price": 17,
+    "meal": "dinner",
+    "course": "appetizer",
+    "item_id": 1008
+  },
+  {
+    "item": "Harvest",
+    "description": "The Acorn Autumn Harvest - Seasonal Vegetables, Herbs & Goodies From Local Farms",
+    "price": 20,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 1009
+  },
+  {
+    "item": "Halloumi",
+    "description": "Beer Battered Halloumi, Zucchini + Potato Pancake, Smashed Peas, Mint Yogurt, Acorn Garden Lemon Balm",
+    "price": 21,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 1010
+  },
+  {
+    "item": "Fennel",
+    "description": "Caramelized Fennel Cream, Fennel Top Pesto, Fusilli Calabrese, Pickled Fennel Stems",
+    "price": 21,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 1011
+  },
+  {
+    "item": "Corn",
+    "description": "Fired Hominy Corn + Padron Pepper Grits, Charred Corn + Walla Walla Onions, Apricot Mustard, Padron Peppers, Smoked Corn Sauce",
+    "price": 19,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 1012
+  },
+  {
+    "item": "Tomato",
+    "description": "Marinated Klippers Organic Farm Cherry Tomatoes, Hazelnut + Almond Tart, Hungarian Sweet Peppers, Herbed Macadamia Nut Cheese",
+    "price": 19,
+    "meal": "dinner",
+    "course": "main",
+    "item_id": 1013
+  },
+  {
+    "item": "Elderflower",
+    "description": "Elderflower Semifreddo, Spruce Shortbread Crumb, Seasonal Berries, White Chocolate Spruce Tip Sauce",
+    "price": 13,
+    "meal": "dinner",
+    "course": "dessert",
+    "item_id": 1014
+  },
+  {
+    "item": "Concord Grape",
+    "description": "Pistachio + Rose Sugar Dusted Beignets, Concord Grape Jelly, Orange Blossom Creme Anglaise",
+    "price": 13,
+    "meal": "dinner",
+    "course": "dessert",
+    "item_id": 1015
+  },
+  {
+    "item": "Plum",
+    "description": "Lemon Pumpkin Seed Crepe, Vanilla Cashew Cream, Pistachio Crumble, Plum",
+    "price": 12,
+    "meal": "dinner",
+    "course": "dessert",
+    "item_id": 1016
+  }
+]
