@@ -58,9 +58,11 @@ int main() {
     customer->join();
   }
   safe_printf("All customers have left\n");
-  //==================================================
-  // TODO: Signal all chefs to leave
-  //==================================================
+
+  Order poison = { 0, 0, true };
+  for (int i = 0; i < nchefs; i++) {
+    order_queue.add(poison);
+  }
 
   // wait for all chefs to leave
   for (auto& chef : chefs) {
