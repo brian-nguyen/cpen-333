@@ -46,7 +46,7 @@ class Chef : public cpen333::thread::thread_object {
 
       // process order
       safe_printf("Chef %d starting order {%d,%d}\n", id_, order.customer_id, order.item_id);
-      std::this_thread::sleep_for(std::chrono::seconds(2));
+      std::this_thread::sleep_for(std::chrono::seconds(5));
       safe_printf("Chef %d completed order {%d,%d}\n", id_, order.customer_id, order.item_id);
 
       // add to those to serve

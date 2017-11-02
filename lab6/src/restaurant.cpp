@@ -33,15 +33,16 @@ int main() {
   for (int i=0; i<nchefs; ++i) {
     chefs.push_back(new Chef(i, order_queue, serve_queue));
   }
-
+  
   for (int i=0; i<nservers; ++i) {
     servers.push_back(new Server(i, serve_queue, customers));
   }
-
+  
   for (int i=0; i<ncustomers; ++i) {
     customers.push_back(new Customer(i, menu, order_queue));
   }
-
+  
+  auto start_time = std::chrono::high_resolution_clock::now();  
   // start everyone
   for (auto& chef : chefs) {
     chef->start();
@@ -58,6 +59,11 @@ int main() {
     customer->join();
   }
   safe_printf("All customers have left\n");
+  auto end_time = std::chrono::high_resolution_clock::now();
+  auto duration = end_time - start_time;
+  auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
+  long ms = duration_ms.count();
+  safe_printf("Time to serve all customers: %ld ms\n", ms);
 
   Order poison = { 0, 0, true };
   for (int i = 0; i < nchefs; i++) {
