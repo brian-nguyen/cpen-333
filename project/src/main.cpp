@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
   std::string warehouse = "data/warehouse0.txt";
   if (argc > 1) warehouse = argv[1];
 
-  cpen333::process::shared_object<SharedData> memory("project_amazoom");
+  cpen333::process::shared_object<SharedData> memory(SHARED_MEMORY_NAME);
   load_warehouse(warehouse, memory->winfo);
 
   std::cout << "Press ENTER to quit." << std::endl;

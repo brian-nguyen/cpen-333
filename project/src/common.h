@@ -5,6 +5,9 @@
 #define MAX_WAREHOUSE_SIZE 80
 #define MAX_RUNNERS 50
 
+#define SHARED_MEMORY_NAME "project_amazoom"
+#define WAREHOUSE_MUTEX_NAME "amazoom_warehouse_mutex"
+
 struct WarehouseInfo {
   int rows;
   int cols;
