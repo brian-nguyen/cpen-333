@@ -12,10 +12,13 @@ class WarehouseUI {
 
   cpen333::console display;
   cpen333::process::shared_object<SharedData> memory;
+  cpen333::process::mutex mutex;
+
+  int prevloc[MAX_ROBOTS][2];
 
   public:
     
-    WarehouseUI() : display(), memory(SHARED_MEMORY_NAME) {
+    WarehouseUI() : display(), memory(SHARED_MEMORY_NAME), mutex(SHARED_MUTEX_NAME) {
       display.clear_all();
       display.set_cursor_visible(false);
     }
@@ -44,6 +47,34 @@ class WarehouseUI {
       fflush(stdout);
     }
 
+    void draw_robots() {
+      RobotInfo& rinfo = memory->rinfo;
+
+      for (size_t i = 0; i < rinfo.nrobots; i++) {
+        char me = 'A' + i;
+        int newr;
+        int newc;
+
+        {
+          std::lock_guard<decltype(mutex)> lock(mutex);
+          newr = rinfo.rloc[i][ROW_IDX];
+          newc = rinfo.rloc[i][COL_IDX];
+        }
+
+        if (newc != prevloc[i][COL_IDX] || newr != prevloc[i][ROW_IDX]) {
+          display.set_cursor_position(YOFF + prevloc[i][ROW_IDX], XOFF + prevloc[i][COL_IDX]);
+          std::printf("%c", EMPTY_CHAR);
+          prevloc[i][COL_IDX] = newc;
+          prevloc[i][ROW_IDX] = newr;
+        }
+
+        display.set_cursor_position(YOFF + newr, XOFF + newc);
+        std::printf("%c", me);
+      }
+
+      fflush(stdout);
+    }
+
     bool quit() {
       return memory->quit;
     }
@@ -59,7 +90,7 @@ int main() {
   ui.draw_warehouse();
 
   while (!ui.quit()) {
-    // ui.draw_robots();
+    ui.draw_robots();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 
