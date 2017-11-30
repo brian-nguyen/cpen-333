@@ -1,4 +1,5 @@
 #define WALL_CHAR 'X'
+#define DOCK_CHAR 'D'
 #define EMPTY_CHAR ' '
 #define SHELF_CHAR 'S'
 

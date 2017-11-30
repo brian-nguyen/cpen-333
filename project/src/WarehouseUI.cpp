@@ -21,9 +21,6 @@ class WarehouseUI {
     }
 
     void draw_warehouse() {
-      static const char WALL = WALL_CHAR;
-      static const char SHELF = SHELF_CHAR;
-
       WarehouseInfo& winfo = memory->winfo;
       RobotInfo& rinfo = memory->rinfo;
 
@@ -33,9 +30,11 @@ class WarehouseUI {
         for (int c = 0; c < winfo.cols; c++) {
           char ch = winfo.warehouse[c][r];
           if (ch == WALL_CHAR) {
-            std::printf("%c", WALL);
+            std::printf("%c", WALL_CHAR);
+          } else if (ch == DOCK_CHAR) {
+            std::printf("%c", DOCK_CHAR);
           } else if (ch == SHELF_CHAR) {
-            std::printf("%c", SHELF);
+            std::printf("%c", SHELF_CHAR);
           } else {
             std::printf("%c", EMPTY_CHAR);
           }
