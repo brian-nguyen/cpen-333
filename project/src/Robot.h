@@ -12,6 +12,9 @@
 #include "common.h"
 #include "safe_printf.h"
 
+#include "Order.h"
+#include "DynamicOrderQueue.h"
+
 #define TAKEN '*'
 
 class Robot : public cpen333::thread::thread_object {
@@ -21,6 +24,8 @@ class Robot : public cpen333::thread::thread_object {
   WarehouseInfo winfo_;
   int id_;
   int loc_[2];
+
+  DynamicOrderQueue& queue_;
 
   void random_travel() {
     std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
@@ -41,7 +46,8 @@ class Robot : public cpen333::thread::thread_object {
   }
   
   public:
-    Robot() : id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME) {
+    Robot(DynamicOrderQueue& queue) :
+      id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), queue_(queue) {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
       winfo_ = memory_->winfo;
       id_ = memory_->rinfo.nrobots;
@@ -123,8 +129,26 @@ class Robot : public cpen333::thread::thread_object {
 
     int main() {
       // randomly go to locations in warehouse
-      random_travel();
-      
+      // random_travel();
+
+      // acquire first order
+      Order o = queue_.get();
+      std::cout << "Robot " << id_ << " acquired Order " << o.id_ << std::endl;
+      while (1) {
+        for (auto& pair : o.route()) {
+          go(pair);
+        }
+
+        // completed order
+        o.set_status(READY);
+        std::cout << "Robot " << id_ << " completed Order " << o.id_ << std::endl;
+        
+        // acqure next order
+        std::cout << "Waiting... ";
+        o = queue_.get();
+        std::cout << "Robot " << id_ << " acquired Order " << o.id_ << std::endl;        
+      }
+
       return 1;
     }
 };

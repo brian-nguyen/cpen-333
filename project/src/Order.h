@@ -37,6 +37,10 @@ class Order {
     status_ = new_status;
   }
 
+  std::vector<std::pair<int, int>>& route() {
+    return route_;
+  }
+
   void set_route(std::vector<std::pair<int, int>> r) {
     route_ = r;
   }

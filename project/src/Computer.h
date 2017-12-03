@@ -13,14 +13,19 @@ using JSON = nlohmann::json;
 #include "common.h"
 #include "Robot.h"
 #include "Product.h"
+#include "Order.h"
+#include "DynamicOrderQueue.h"
 
 class Computer {
   cpen333::process::shared_object<SharedData> memory_;
   std::map<std::string, int> inventory_;
+
+  DynamicOrderQueue queue_;
   std::vector<Robot*> robots_;
 
  public:
-  Computer() : memory_(SHARED_MEMORY_NAME), robots_(), inventory_() { }
+
+  Computer() : memory_(SHARED_MEMORY_NAME), robots_(), inventory_(), queue_() { }
 
   void load_warehouse(std::string filename) {
       memory_->winfo.rows = 0;
@@ -90,17 +95,17 @@ class Computer {
     safe_printf("0: Quit\n");
     safe_printf("1: Spawn Robot\n");
     safe_printf("2: View Inventory\n");
+    safe_printf("3: Add Test Orders\n");
     safe_printf("\n");
-    
   }
 
   void spawn_robot() {
     if (robot_count() == MAX_ROBOTS) {
-      safe_printf("MAX reached\n\n");
+      std::cout << "MAX REACHED\n";
       return;
     }
 
-    robots_.push_back(new Robot());
+    robots_.push_back(new Robot(queue_));
     robots_.back()->start();
   }
 
@@ -110,6 +115,10 @@ class Computer {
 
   std::vector<Robot*>& robots() {
     return robots_;
+  }
+
+  DynamicOrderQueue& queue() {
+    return queue_;
   }
 
   void view_inventory() {

@@ -1,20 +1,21 @@
 #include <iostream>
 
+#include <exception>
 #include "TestException.h"
 #include "Computer.h"
 #include "Order.h"
 #include "Robot.h"
+#include "DynamicOrderQueue.h"
 
-Computer& before() {
-  Computer c;
+void before(Computer& c) {
   c.load_warehouse("data/warehouse0.txt");
   c.load_inventory();
   c.init_robots();
-  return c;
 }
 
 void testRobotSpawn() {
-  Computer& c = before();
+  Computer c;
+  before(c);
   c.spawn_robot();
   
   if (c.robot_count() != 1) {
@@ -23,7 +24,8 @@ void testRobotSpawn() {
 }
 
 void testRobotSpawnMultiple() {
-  Computer& c = before();
+  Computer c;
+  before(c);
   c.spawn_robot();
   c.spawn_robot();
   if (c.robot_count() != 2) {
@@ -32,7 +34,8 @@ void testRobotSpawnMultiple() {
 }
 
 void testRobotMoveToGoal() {
-  Computer& c = before();
+  Computer c;
+  before(c);
   c.spawn_robot();
   Robot* r = c.robots().front();
   std::pair<int, int> goal(3, 1);
@@ -43,8 +46,8 @@ void testRobotMoveToGoal() {
 }
 
 void testRobotMoveToGoals() {
-  Computer& c = before();
-  c.spawn_robot();
+  Computer c;
+  before(c);
   Robot* r = c.robots().front();
 
   std::pair<int, int> g1(3, 1);
