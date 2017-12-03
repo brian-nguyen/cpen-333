@@ -37,10 +37,7 @@ class Robot : public cpen333::thread::thread_object {
       return id_;
     }
 
-    int go(int goalc, int goalr) {
-      // check shared quit memory
-      if (memory_->quit) return -1;
-
+    int go(int& goalc, int& goalr) {
       // get current location
       int c = loc_[COL_IDX];
       int r = loc_[ROW_IDX];
@@ -99,7 +96,7 @@ class Robot : public cpen333::thread::thread_object {
       memory_->rinfo.rloc[id_][COL_IDX] = c;
       memory_->rinfo.rloc[id_][ROW_IDX] = r;
       std::this_thread::sleep_for(std::chrono::milliseconds(100));      
-      return memory_->quit ? -1 : 0;
+      return 0;
     }
 
     int restock() {
@@ -112,7 +109,7 @@ class Robot : public cpen333::thread::thread_object {
       std::uniform_int_distribution<int> cdist(0, winfo_.cols);
       
       // randomly go to locations in warehouse
-      while (!memory_->quit) {
+      while (1) {
         int c, r;
         do {
           c = rdist(rnd);
@@ -123,8 +120,6 @@ class Robot : public cpen333::thread::thread_object {
         int i = go(c, r);
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
       }
-      
-      safe_printf("Robot %d done\n", id_);
       return 1;
     }
 };

@@ -1,22 +1,22 @@
 [
   {
     "name": "Spoon",
-    "weight": "15"
+    "weight": 15
   },
   {
     "name": "Fork",
-    "weight": "17"
+    "weight": 17
   },
   {
     "name": "Knife",
-    "weight": "20"
+    "weight": 20
   },
   {
     "name": "Chopsticks",
-    "weight": "10"
+    "weight": 10
   },
   {
     "name": "Tongs",
-    "weight": "12"
+    "weight": 12
   }
 ]
