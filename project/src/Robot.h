@@ -14,10 +14,6 @@
 
 #define TAKEN '*'
 
-struct Task {
-  
-}
-
 class Robot : public cpen333::thread::thread_object {
   cpen333::process::shared_object<SharedData> memory_;
   cpen333::process::mutex mutex_;
