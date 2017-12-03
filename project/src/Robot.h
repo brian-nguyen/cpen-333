@@ -21,6 +21,24 @@ class Robot : public cpen333::thread::thread_object {
   WarehouseInfo winfo_;
   int id_;
   int loc_[2];
+
+  void random_travel() {
+    std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<int> rdist(0, winfo_.rows);
+    std::uniform_int_distribution<int> cdist(0, winfo_.cols);
+
+    while (1) {
+      std::pair<int, int> goal(0, 0);
+      do {
+        goal.first = rdist(rnd);
+        goal.second = cdist(rnd);
+      } while (winfo_.warehouse[goal.first][goal.second] != EMPTY_CHAR);
+      
+      winfo_ = memory_->winfo;
+      int i = go(goal);
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+  }
   
   public:
     Robot() : id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME) {
@@ -104,22 +122,9 @@ class Robot : public cpen333::thread::thread_object {
     }
 
     int main() {
-      std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
-      std::uniform_int_distribution<int> rdist(0, winfo_.rows);
-      std::uniform_int_distribution<int> cdist(0, winfo_.cols);
-      
       // randomly go to locations in warehouse
-      while (1) {
-        std::pair<int, int> goal(0, 0);
-        do {
-          goal.first = rdist(rnd);
-          goal.second = cdist(rnd);
-        } while (winfo_.warehouse[goal.first][goal.second] != EMPTY_CHAR);
-        
-        winfo_ = memory_->winfo;
-        int i = go(goal);
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      }
+      random_travel();
+      
       return 1;
     }
 };

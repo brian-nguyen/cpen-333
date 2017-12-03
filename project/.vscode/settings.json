@@ -19,6 +19,7 @@
     "iterator": "cpp",
     "set": "cpp",
     "string_view": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "algorithm": "cpp"
   }
 }

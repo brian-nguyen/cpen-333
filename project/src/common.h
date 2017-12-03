@@ -10,7 +10,7 @@
 #define ROW_IDX 1
 
 #define MAX_WAREHOUSE_SIZE 80
-#define MAX_ROBOTS 10
+#define MAX_ROBOTS 19
 
 #define SHARED_MEMORY_NAME "project_amazoom"
 #define SHARED_MUTEX_NAME "amazoom_mutex"
