@@ -37,7 +37,7 @@ class Robot : public cpen333::thread::thread_object {
       return id_;
     }
 
-    int go(int& goalc, int& goalr) {
+    int go(std::pair<int, int>& goal) {
       // get current location
       int c = loc_[COL_IDX];
       int r = loc_[ROW_IDX];
@@ -54,7 +54,7 @@ class Robot : public cpen333::thread::thread_object {
       memory_->rinfo.rloc[id_][COL_IDX] = c;
       memory_->rinfo.rloc[id_][ROW_IDX] = r;
 
-      if (c == goalc && r == goalr) return 1;
+      if (c == goal.first && r == goal.second) return 1;
 
       std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
@@ -65,28 +65,28 @@ class Robot : public cpen333::thread::thread_object {
       if (c < winfo_.cols) {
         loc_[COL_IDX] = c + 1;
         loc_[ROW_IDX] = r;
-        if (go(goalc, goalr) == 1) return 1;
+        if (go(goal) == 1) return 1;
       }
 
       // go left
       if (c > 0) {
         loc_[COL_IDX] = c - 1;
         loc_[ROW_IDX] = r;
-        if (go(goalc, goalr) == 1) return 1;
+        if (go(goal) == 1) return 1;
       }
 
       // go down
       if (r < winfo_.rows) {
         loc_[COL_IDX] = c;
         loc_[ROW_IDX] = r + 1;
-        if (go(goalc, goalr) == 1) return 1;
+        if (go(goal) == 1) return 1;
       }
 
       // go up
       if (r > 0) {
         loc_[COL_IDX] = c;
         loc_[ROW_IDX] = r - 1;
-        if (go(goalc, goalr) == 1) return 1;
+        if (go(goal) == 1) return 1;
       }
 
       // backtrack
@@ -110,14 +110,14 @@ class Robot : public cpen333::thread::thread_object {
       
       // randomly go to locations in warehouse
       while (1) {
-        int c, r;
+        std::pair<int, int> goal(0, 0);
         do {
-          c = rdist(rnd);
-          r = cdist(rnd);
-        } while (winfo_.warehouse[c][r] != EMPTY_CHAR);
+          goal.first = rdist(rnd);
+          goal.second = cdist(rnd);
+        } while (winfo_.warehouse[goal.first][goal.second] != EMPTY_CHAR);
         
         winfo_ = memory_->winfo;
-        int i = go(c, r);
+        int i = go(goal);
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
       }
       return 1;

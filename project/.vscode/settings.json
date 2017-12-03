@@ -9,6 +9,9 @@
     "stdexcept": "cpp",
     "typeinfo": "cpp",
     "random": "cpp",
-    "string": "cpp"
+    "string": "cpp",
+    "map": "cpp",
+    "memory": "cpp",
+    "utility": "cpp"
   }
 }

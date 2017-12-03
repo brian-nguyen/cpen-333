@@ -57,12 +57,9 @@ class Computer {
       fin >> jinventory;
 
       for (const auto& jitem : jinventory) {
-        Product p;
-        p.name = jitem["name"];
-        p.weight = (double)jitem["weight"];
-        p.quantity = 10;
+        Product p(jitem["name"], (double)jitem["weight"], 10);
 
-        auto it = inventory_.insert({ p.name, p.quantity });
+        auto it = inventory_.insert({ p.name_, p.quantity_ });
       }
     }
   }

@@ -10,7 +10,9 @@
                 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/include",
                 "/Users/jaeharys/cpen333/include",
                 "/Users/jaeharys/OneDrive/UBC/4th Year/CPEN 333/labs/project/include",
-                "${workspaceRoot}"
+                "${workspaceRoot}",
+                "${workspaceRoot}/include",
+                "${workspaceRoot}/src"
             ],
             "defines": [],
             "intelliSenseMode": "clang-x64",
@@ -24,7 +26,8 @@
                     "/Users/jaeharys/cpen333/include",
                     "/Users/jaeharys/OneDrive/UBC/4th Year/CPEN 333/labs/project/include",
                     "${workspaceRoot}",
-                    "${workspaceRoot}/include"
+                    "${workspaceRoot}/include",
+                    "${workspaceRoot}/src"
                 ],
                 "limitSymbolsToIncludedHeaders": true,
                 "databaseFilename": ""

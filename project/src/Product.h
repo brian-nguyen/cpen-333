@@ -4,10 +4,25 @@
 #include <iostream>
 #include <string>
 
-struct Product {
-  std::string name;
-  double weight;
-  int quantity;
+class Product {
+ public:
+  std::string name_;
+  double weight_;
+  int quantity_;
+
+  Product(std::string name, double weight, int quantity) {
+    name_ = name;
+    weight_ = weight;
+    quantity_ = quantity;
+  }
+  
+  friend bool operator<(const Product& a, const Product& b) {
+    return a.name_ < b.name_;
+  }
+
+  friend bool operator==(const Product& a, const Product& b) {
+    return a.name_ == b.name_;
+  }
 };
 
 #endif
