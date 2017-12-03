@@ -40,6 +40,7 @@ int main() {
     testAddProduct(o, p);
     testAddDuplicateProduct(o, p);
     testRemoveProduct(o, p);
+    testRemoveProduct(o, p);
     
     std::cout << "All tests passed" << std::endl;
   } catch (TestException& exc) {

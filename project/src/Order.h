@@ -5,21 +5,32 @@
 #include <vector>
 #include <algorithm>
 
+#include <json.hpp>
+using JSON = nlohmann::json;
+
 #include "Product.h"
 
 #define NEW_ORDER 0
+#define PLACED 1
+#define READY 2
+#define DELIVERED 3
 
 class Order {
-  int id_;
-  int status_;
   std::vector<Product> products_;
   std::vector<std::pair<int, int>> route_;
 
  public:
+  int id_;
+  int status_;
+  
   Order(int id, int status) : id_(id), status_(status), products_() { }
 
-  int get_status() {
-    return status_;
+  static JSON toJSON(Order& o) {
+    JSON j;
+    j["id"] = o.id_;
+    j["status"] = o.status_;
+    j["products"] = Product::toJSON(o.products());
+    return j;
   }
 
   void set_status(int new_status) {
@@ -43,11 +54,21 @@ class Order {
   }
 
   void remove(Product p) {
-    products_.erase(std::find(products_.begin(), products_.end(), p));
+    auto it = std::find(products_.begin(), products_.end(), p);
+
+    if (it != products_.end()) products_.erase(it);
   }
 
-  const std::vector<Product>& products() const {
+  std::vector<Product>& products() {
     return products_;
+  }
+
+  friend bool operator<(const Order& a, const Order& b) {
+    return a.id_ < b.id_;
+  }
+
+  friend bool operator==(const Product& a, const Product& b) {
+    return a.id_ == b.id_;
   }
 
 };
