@@ -133,7 +133,7 @@ class Robot : public cpen333::thread::thread_object {
 
       // acquire first order
       Order o = queue_.get();
-      std::cout << "Robot " << id_ << " acquired Order " << o.id_ << std::endl;
+      safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
       while (1) {
         for (auto& pair : o.route()) {
           go(pair);
@@ -141,12 +141,11 @@ class Robot : public cpen333::thread::thread_object {
 
         // completed order
         o.set_status(READY);
-        std::cout << "Robot " << id_ << " completed Order " << o.id_ << std::endl;
-        
+        safe_printf("Robot %d completed Order %d on location {%d, %d}\n", id_, o.id_, o.route().back().first, o.route().back().second);
+
         // acqure next order
-        std::cout << "Waiting... ";
         o = queue_.get();
-        std::cout << "Robot " << id_ << " acquired Order " << o.id_ << std::endl;        
+        safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
       }
 
       return 1;

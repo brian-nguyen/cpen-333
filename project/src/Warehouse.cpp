@@ -51,9 +51,9 @@ int main(int argc, char* argv[]) {
   goals2.push_back(g1);
   o2.set_route(goals2);
   goals3.push_back(g3);
+  goals3.push_back(g4);
   goals3.push_back(g1);
   goals3.push_back(g2);
-  goals3.push_back(g4);
   o3.set_route(goals3);
 
   char cmd = 0;

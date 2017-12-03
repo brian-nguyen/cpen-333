@@ -20,6 +20,7 @@
     "set": "cpp",
     "string_view": "cpp",
     "vector": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "deque": "cpp"
   }
 }

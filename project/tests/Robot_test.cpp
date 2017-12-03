@@ -2,6 +2,8 @@
 
 #include <exception>
 #include "TestException.h"
+
+#include "common.h"
 #include "Computer.h"
 #include "Order.h"
 #include "Robot.h"
