@@ -37,7 +37,7 @@ class Robot : public cpen333::thread::thread_object {
       return id_;
     }
 
-    int go(int& goalc, int& goalr) {
+    int go(int goalc, int goalr) {
       // check shared quit memory
       if (memory_->quit) return -1;
 
@@ -45,12 +45,19 @@ class Robot : public cpen333::thread::thread_object {
       int c = loc_[COL_IDX];
       int r = loc_[ROW_IDX];
 
-      // go back if on shelf or wall
-      if ((winfo_.warehouse[c][r] == WALL_CHAR) || (winfo_.warehouse[c][r] == SHELF_CHAR)) return 0;
+      // go back if on shelf or wall or dock or taken
+      if (
+        winfo_.warehouse[c][r] == WALL_CHAR ||
+        winfo_.warehouse[c][r] == SHELF_CHAR ||
+        winfo_.warehouse[c][r] == DOCK_CHAR ||
+        winfo_.warehouse[c][r] == TAKEN
+      ) return 0;
 
       // update UI
       memory_->rinfo.rloc[id_][COL_IDX] = c;
       memory_->rinfo.rloc[id_][ROW_IDX] = r;
+
+      if (c == goalc && r == goalr) return 1;
 
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
@@ -100,8 +107,6 @@ class Robot : public cpen333::thread::thread_object {
     }
 
     int main() {
-      safe_printf("Robot %d starting in location {%d, %d}\n", id_, loc_[COL_IDX], loc_[ROW_IDX]);
-      
       std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
       std::uniform_int_distribution<int> rdist(0, winfo_.rows);
       std::uniform_int_distribution<int> cdist(0, winfo_.cols);

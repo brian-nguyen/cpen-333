@@ -90,9 +90,9 @@ class WarehouseUI {
 
 int main() {
   WarehouseUI ui;
-  ui.draw_warehouse();
 
   while (!ui.quit()) {
+    ui.draw_warehouse();
     ui.draw_robots();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
