@@ -1,8 +1,8 @@
-#ifdef AMAZOOM_COMMON_H
+#ifndef AMAZOOM_COMMON_H
 #define AMAZOOM_COMMON_H
 
 #define WALL_CHAR 'X'
-#define DOCK_CHAR 'D'
+#define DOCK_CHAR '_'
 #define EMPTY_CHAR ' '
 #define SHELF_CHAR 'S'
 
@@ -10,7 +10,7 @@
 #define ROW_IDX 1
 
 #define MAX_WAREHOUSE_SIZE 80
-#define MAX_ROBOTS 5
+#define MAX_ROBOTS 10
 
 #define SHARED_MEMORY_NAME "project_amazoom"
 #define SHARED_MUTEX_NAME "amazoom_mutex"

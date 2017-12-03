@@ -1,3 +1,6 @@
+#ifndef AMAZOOM_WAREHOUSE_VIZ_H
+#define AMAZOOM_WAREHOUSE_VIZ_H
+
 #include "common.h"
 
 #include <cpen333/process/shared_memory.h>
@@ -96,3 +99,5 @@ int main() {
 
   return 0;
 }
+
+#endif

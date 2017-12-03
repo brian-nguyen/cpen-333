@@ -7,7 +7,7 @@ warehouse:
 	$(CC) $(CFLAGS) -o ./bin/Warehouse ./src/Warehouse.cpp
 
 ui:
-# 	$(CC) $(CFLAGS) -o ./bin/WarehouseUI ./src/WarehouseUI.cpp
+	$(CC) $(CFLAGS) -o ./bin/WarehouseUI ./src/WarehouseUI.cpp
 
 clean:
 	rm -rf ./bin/*
