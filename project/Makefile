@@ -13,5 +13,8 @@ ui:
 order_test:
 	$(CC) $(CFLAGS) -o ./bin/tests/Order_test ./tests/Order_test.cpp -I./src
 
+shelf_test:
+	$(CC) $(CFLAGS) -o ./bin/tests/Shelf_test ./tests/Shelf_test.cpp -I./src
+
 clean:
 	rm -rf ./bin/*

@@ -42,11 +42,10 @@ class Order {
   }
 
   bool add(Product p) {
-    for (Product& product : products_) {
-      if (product == p) {
-        product.quantity_ += p.quantity_;
-        return false;
-      }
+    auto it = std::find(products_.begin(), products_.end(), p);
+    if (it != products_.end()) {
+      it->quantity_ += p.quantity_;
+      return false;
     }
 
     products_.push_back(p);
@@ -67,7 +66,7 @@ class Order {
     return a.id_ < b.id_;
   }
 
-  friend bool operator==(const Product& a, const Product& b) {
+  friend bool operator==(const Order& a, const Order& b) {
     return a.id_ == b.id_;
   }
 

@@ -1,9 +1,11 @@
 #ifndef AMAZOOM_PRODUCT_H
 #define AMAZOOM_PRODUCT_H
 
-#include <iostream>
 #include <string>
 #include <vector>
+
+#include <json.hpp>
+using JSON = nlohmann::json;
 
 class Product {
  public:
