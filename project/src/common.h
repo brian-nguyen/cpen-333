@@ -1,3 +1,6 @@
+#ifdef AMAZOOM_COMMON_H
+#define AMAZOOM_COMMON_H
+
 #define WALL_CHAR 'X'
 #define DOCK_CHAR 'D'
 #define EMPTY_CHAR ' '
@@ -29,3 +32,5 @@ struct SharedData {
   RobotInfo rinfo;
   bool quit;
 };
+
+#endif

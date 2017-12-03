@@ -1,10 +1,26 @@
-#include "common.h"
-
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <random>
+#include <vector>
 #include <cpen333/process/shared_memory.h>
+
+#define MAX_WAREHOUSE_SIZE 80
+#define MAX_ROBOTS 5
+
+#define SHARED_MEMORY_NAME "project_amazoom"
+
+#include "Robot.h"
+
+struct WarehouseInfo {
+  int rows;
+  int cols;
+  char warehouse[MAX_WAREHOUSE_SIZE][MAX_WAREHOUSE_SIZE];
+};
+
+struct SharedData {
+  WarehouseInfo winfo;
+  bool quit;
+};
 
 void load_warehouse(const std::string& filename, WarehouseInfo& winfo) {
   winfo.rows = 0;
@@ -34,31 +50,21 @@ void load_warehouse(const std::string& filename, WarehouseInfo& winfo) {
   }
 }
 
-void init_robots(const WarehouseInfo& winfo, RobotInfo& rinfo) {
-  rinfo.nrobots = 0;
-
-  std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
-  std::uniform_int_distribution<size_t> rdist(0, winfo.rows);
-  std::uniform_int_distribution<size_t> cdist(0, winfo.cols);  
-  for (size_t i = 0; i < MAX_ROBOTS; i++) {
-    size_t r, c;
-    do {
-      r = rdist(rnd);
-      c = cdist(rnd);
-    } while ((winfo.warehouse[c][r] != EMPTY_CHAR) && (winfo.warehouse[c][r] != SHELF_CHAR));
-
-    rinfo.rloc[i][COL_IDX] = c;
-    rinfo.rloc[i][ROW_IDX] = r;
-  }
-}
-
 int main(int argc, char* argv[]) {
   std::string warehouse = "data/warehouse0.txt";
   if (argc > 1) warehouse = argv[1];
 
   cpen333::process::shared_object<SharedData> memory(SHARED_MEMORY_NAME);
   load_warehouse(warehouse, memory->winfo);
-  init_robots(memory->winfo, memory->rinfo);
+
+  std::vector<Robot*> robots;
+  for (int i = 0; i < MAX_ROBOTS; i++) {
+    robots.push_back(new Robot(i));
+  }
+
+  for (auto& robot : robots) {
+    robot->start();
+  }
 
   std::cout << "Press ENTER to quit." << std::endl;
   std::cin.get();
