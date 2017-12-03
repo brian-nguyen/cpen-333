@@ -59,7 +59,7 @@ class Robot : public cpen333::thread::thread_object {
 
       if (c == goalc && r == goalr) return 1;
 
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
       // mark current position
       winfo_.warehouse[c][r] = TAKEN;
@@ -98,7 +98,7 @@ class Robot : public cpen333::thread::thread_object {
       // update UI
       memory_->rinfo.rloc[id_][COL_IDX] = c;
       memory_->rinfo.rloc[id_][ROW_IDX] = r;
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));      
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));      
       return memory_->quit ? -1 : 0;
     }
 
