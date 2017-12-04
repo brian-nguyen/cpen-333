@@ -131,24 +131,24 @@ class Robot : public cpen333::thread::thread_object {
 
     int main() {
       // randomly go to locations in warehouse
-      random_travel();
+      // random_travel();
 
       // acquire first order
-      // Order o = queue_.get();
-      // while (1) {
-      //   safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
-      //   for (auto& pair : o.route()) {
-      //     winfo_ = memory_->winfo;
-      //     if (go(pair) == 0) {
-      //       safe_printf("ERROR COMPLETING ORDER\n");
-      //     }
-      //   }
-      //   o.set_status(READY);
-      //   safe_printf("Robot %d completed Order %d on location {%d, %d}\n", id_, o.id_, o.route().back().first, o.route().back().second);
+      Order o = queue_.get();
+      while (1) {
+        safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
+        for (auto& pair : o.route()) {
+          winfo_ = memory_->winfo;
+          if (go(pair) == 0) {
+            safe_printf("ERROR COMPLETING ORDER\n");
+          }
+        }
+        o.set_status(READY);
+        safe_printf("Robot %d completed Order %d on location {%d, %d}\n", id_, o.id_, o.route().back().first, o.route().back().second);
 
-      //   // acquire next order
-      //   o = queue_.get();
-      // }
+        // acquire next order
+        o = queue_.get();
+      }
 
       return 1;
     }
