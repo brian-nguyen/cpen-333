@@ -22,6 +22,8 @@
     "vector": "cpp",
     "algorithm": "cpp",
     "deque": "cpp",
-    "type_traits": "cpp"
+    "type_traits": "cpp",
+    "__locale": "cpp",
+    "ios": "cpp"
   }
 }

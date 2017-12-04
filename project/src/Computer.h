@@ -23,11 +23,12 @@ class Computer {
   DynamicOrderQueue queue_;
   std::vector<Robot*> robots_;
 
-  int total_orders_;
+  int orders_;
 
  public:
 
-  Computer() : memory_(SHARED_MEMORY_NAME), robots_(), inventory_(), queue_() { }
+  Computer() :
+    memory_(SHARED_MEMORY_NAME), robots_(), inventory_(), queue_(), orders_(0) { }
 
   void load_warehouse(std::string filename) {
       memory_->winfo.rows = 0;
@@ -73,6 +74,19 @@ class Computer {
     }
   }
 
+  void load_shelves() {
+    for (int c = 0; c < memory_->winfo.cols; c++) {
+      for (int r = 0; r < memory_->winfo.rows; r++) {
+        if (memory_->winfo.warehouse[c][r] == SHELF_CHAR) {
+          std::pair<int, int> loc(c, r);
+          safe_printf("Shelf located at {%d, %d}\n", c, r);
+        } else if (memory_->winfo.warehouse[c][r] == DOCK_CHAR) {
+          safe_printf("Dock located at {%d, %d}\n", c, r);
+        }
+      }
+    }
+  }
+
   void init_robots() {
     memory_->rinfo.nrobots = 0;
 
@@ -93,7 +107,7 @@ class Computer {
   }
 
   void show_menu() {
-    safe_printf("WAREHOUSE MANAGER, ENTER A COMMAND\n0: Quit\n1: Spawn Robot\n2: View Inventory\n3: Add Test Orders\n4: Add Order\n");
+    safe_printf("WAREHOUSE MANAGER, ENTER A COMMAND\n0: Quit\n1: Spawn Robot\n2: View Inventory\n3: Add Test Orders\n\n");
   }
 
   void spawn_robot() {
@@ -118,25 +132,8 @@ class Computer {
     return queue_;
   }
 
-  void add_order() {
-    total_orders_++;
-    Order o(total_orders_, NEW_ORDER);
-
-    std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<size_t> rdist(0, memory_->winfo.rows);
-    std::uniform_int_distribution<size_t> cdist(0, memory_->winfo.cols);
-
-    std::vector<std::pair<int, int>> goal;
-    std::pair<int, int> pt(0, 0);
-    for (int i = 0; i < 5; i++) {
-      do {
-        pt.first = rdist(rnd);
-        pt.second = cdist(rnd);
-      } while (memory_->winfo.warehouse[pt.first][pt.second] != EMPTY_CHAR);
-    
-      goal.push_back(pt);
-    }
-    
+  void add_order(Order o) {
+    orders_++;
     queue_.add(o);
   }
 
@@ -173,7 +170,7 @@ class Computer {
       queue_.add(o1);
       queue_.add(o2);
       queue_.add(o3);
-      total_orders_ += 3;
+      orders_ += 3;
   }
 
   void view_inventory() {

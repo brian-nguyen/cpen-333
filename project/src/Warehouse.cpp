@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
   // start computer and load layout and inventory
   Computer computer;
   computer.load_warehouse(name);
+  computer.load_shelves();
   computer.load_inventory();
   computer.init_robots();
 
@@ -46,9 +47,6 @@ int main(int argc, char* argv[]) {
         break;
       case '3':
         computer.test_order_queue();
-        break;
-      case '4':
-        computer.add_order();
         break;
       default:
        safe_printf("nani?\n");
