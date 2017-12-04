@@ -39,9 +39,11 @@ class Robot : public cpen333::thread::thread_object {
         goal.second = cdist(rnd);
       } while (winfo_.warehouse[goal.first][goal.second] != EMPTY_CHAR);
       
+      safe_printf("Robot %d going to location {%d, %d}\n", id_, goal.first, goal.second);
       winfo_ = memory_->winfo;
       int i = go(goal);
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+      safe_printf("Robot %d reached location {%d, %d}\n", id_, goal.first, goal.second);
+      std::this_thread::sleep_for(std::chrono::milliseconds(2000));
     }
   }
   
@@ -133,19 +135,19 @@ class Robot : public cpen333::thread::thread_object {
 
       // acquire first order
       Order o = queue_.get();
-      safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
       while (1) {
+        safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
         for (auto& pair : o.route()) {
-          go(pair);
+          winfo_ = memory_->winfo;
+          if (go(pair) == 0) {
+            safe_printf("ERROR COMPLETING ORDER\n");
+          }
         }
-
-        // completed order
         o.set_status(READY);
         safe_printf("Robot %d completed Order %d on location {%d, %d}\n", id_, o.id_, o.route().back().first, o.route().back().second);
 
-        // acqure next order
+        // acquire next order
         o = queue_.get();
-        safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
       }
 
       return 1;

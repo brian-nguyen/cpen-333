@@ -21,6 +21,7 @@
     "string_view": "cpp",
     "vector": "cpp",
     "algorithm": "cpp",
-    "deque": "cpp"
+    "deque": "cpp",
+    "type_traits": "cpp"
   }
 }

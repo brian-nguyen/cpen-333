@@ -23,6 +23,8 @@ class Computer {
   DynamicOrderQueue queue_;
   std::vector<Robot*> robots_;
 
+  int total_orders_;
+
  public:
 
   Computer() : memory_(SHARED_MEMORY_NAME), robots_(), inventory_(), queue_() { }
@@ -91,12 +93,7 @@ class Computer {
   }
 
   void show_menu() {
-    safe_printf("WAREHOUSE MANAGER, ENTER A COMMAND\n");
-    safe_printf("0: Quit\n");
-    safe_printf("1: Spawn Robot\n");
-    safe_printf("2: View Inventory\n");
-    safe_printf("3: Add Test Orders\n");
-    safe_printf("\n");
+    safe_printf("WAREHOUSE MANAGER, ENTER A COMMAND\n0: Quit\n1: Spawn Robot\n2: View Inventory\n3: Add Test Orders\n4: Add Order\n");
   }
 
   void spawn_robot() {
@@ -119,6 +116,64 @@ class Computer {
 
   DynamicOrderQueue& queue() {
     return queue_;
+  }
+
+  void add_order() {
+    total_orders_++;
+    Order o(total_orders_, NEW_ORDER);
+
+    std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<size_t> rdist(0, memory_->winfo.rows);
+    std::uniform_int_distribution<size_t> cdist(0, memory_->winfo.cols);
+
+    std::vector<std::pair<int, int>> goal;
+    std::pair<int, int> pt(0, 0);
+    for (int i = 0; i < 5; i++) {
+      do {
+        pt.first = rdist(rnd);
+        pt.second = cdist(rnd);
+      } while (memory_->winfo.warehouse[pt.first][pt.second] != EMPTY_CHAR);
+    
+      goal.push_back(pt);
+    }
+    
+    queue_.add(o);
+  }
+
+  void test_order_queue() {
+      // some test orders
+      Order o1(0, NEW_ORDER);
+      Order o2(1, NEW_ORDER);
+      Order o3(2, NEW_ORDER);
+      std::pair<int, int> g1(3, 1);
+      std::pair<int, int> g2(15, 1);
+      std::pair<int, int> g3(5, 1);
+      std::pair<int, int> g4(15, 5);
+      
+      std::vector<std::pair<int, int>> goals1;
+      std::vector<std::pair<int, int>> goals2;
+      std::vector<std::pair<int, int>> goals3;
+      
+      goals1.push_back(g1);
+      goals1.push_back(g2);
+      goals1.push_back(g3);
+      goals1.push_back(g4);
+      o1.set_route(goals1);
+      goals2.push_back(g4);
+      goals2.push_back(g3);
+      goals2.push_back(g2);
+      goals2.push_back(g1);
+      o2.set_route(goals2);
+      goals3.push_back(g3);
+      goals3.push_back(g4);
+      goals3.push_back(g1);
+      goals3.push_back(g2);
+      o3.set_route(goals3);
+
+      queue_.add(o1);
+      queue_.add(o2);
+      queue_.add(o3);
+      total_orders_ += 3;
   }
 
   void view_inventory() {
