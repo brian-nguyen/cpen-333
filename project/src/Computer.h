@@ -22,7 +22,7 @@ using JSON = nlohmann::json;
 class Computer {
   cpen333::process::shared_object<SharedData> memory_;
   cpen333::process::mutex mutex_;
-  std::map<std::string, int> inventory_;
+  std::map<Product, int> inventory_;
 
   std::vector<Order> orders_;
 
@@ -72,23 +72,24 @@ class Computer {
       JSON jinventory;
       fin >> jinventory;
 
-      std::vector<Product> products;
+      std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
+      std::uniform_int_distribution<size_t> dist(0, 15);
       for (const auto& jitem : jinventory) {
-        Product p(jitem["name"], (double)jitem["weight"], 10);
-        auto it = inventory_.insert({ p.name_, p.quantity_ });
-        products.push_back(p);
+        Product p(jitem["name"], (double)jitem["weight"]);
+        int quantity = dist(rnd);
+        auto it = inventory_.insert({ p, quantity });
       }
 
-      load_shelves(products);
+      load_shelves(inventory_);
     }
   }
 
-  void load_shelves(std::vector<Product> products) {
+  void load_shelves(std::map<Product, int> products) {
     std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
     std::uniform_int_distribution<size_t> dist(0, shelves_.size());
 
-    for (Product& p : products) {
-      shelves_[dist(rnd)].add(p);
+    for (auto& pair : products) {
+      shelves_[dist(rnd)].add(pair.first, pair.second);
     }
   }
 
@@ -195,7 +196,8 @@ class Computer {
   }
 
   int view_stock(std::string& name) {
-    auto it = inventory_.find(name);
+    Product p(name, 0);
+    auto it = inventory_.find(p);
     if (it != inventory_.end()) {
       return it->second;
     }
@@ -205,7 +207,7 @@ class Computer {
 
   void view_inventory() {
     for (const auto& pair : inventory_) {
-      safe_printf("%s: %d\n", pair.first.c_str(), pair.second);
+      safe_printf("%s: %d\n", pair.first.name_.c_str(), pair.second);
     }
     safe_printf("\n");
   }
@@ -213,8 +215,8 @@ class Computer {
   void view_shelves() {
     for (int i = 0; i < shelves_.size(); i++) {
       safe_printf("Shelf %d contains:\n", i);
-      for (Product& p : shelves_[i].products()) {
-        safe_printf("\t%s: %d\n", p.name_.c_str(), p.quantity_);
+      for (auto& pair : shelves_[i].products()) {
+        safe_printf("%d %s\n", pair.second, pair.first.name_.c_str());
       }
       safe_printf("\n");
     }

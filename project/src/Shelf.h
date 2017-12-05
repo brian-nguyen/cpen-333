@@ -1,6 +1,7 @@
 #ifndef AMAZOOM_SHELF_H
 #define AMAZOOM_SHELF_H
 
+#include <map>
 #include <vector>
 #include <algorithm>
 
@@ -9,7 +10,7 @@
 class Shelf {
   double max_weight_;
   std::pair<int, int> location_;
-  std::vector<Product> products_;
+  std::map<Product, int> products_;
 
  public:
   Shelf(double max_weight, std::pair<int, int> location) :
@@ -19,26 +20,25 @@ class Shelf {
     return location_;
   }
 
-  bool add(Product p) {
-    auto it = std::find(products_.begin(), products_.end(), p);
+  bool add(Product p, int quantity) {
+    auto it = products_.find(p);
     if (it != products_.end()) {
-      it->quantity_ += p.quantity_;
-      return false;
+      products_[p] += quantity;
     }
 
-    products_.push_back(p);
+    products_.insert({p, quantity});
     return true;
   }
 
-  void remove(Product p) {
-    auto it = std::find(products_.begin(), products_.end(), p);
+  void remove(Product p, int quantity) {
+    auto it = products_.find(p);
     if (it != products_.end()) {
       products_.erase(it);
     }
   }
 
   bool has_product(Product p) {
-    auto it = std::find(products_.begin(), products_.end(), p);
+    auto it = products_.find(p);
     if (it != products_.end()) {
       return true;
     }
@@ -46,7 +46,7 @@ class Shelf {
     return false;
   }
 
-  std::vector<Product>& products() {
+  std::map<Product, int>& products() {
     return products_;
   }
 

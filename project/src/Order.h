@@ -2,6 +2,7 @@
 #define AMAZOOM_ORDER_H
 
 #include <iostream>
+#include <map>
 #include <vector>
 #include <algorithm>
 
@@ -16,7 +17,7 @@ using JSON = nlohmann::json;
 #define DELIVERED 3
 
 class Order {
-  std::vector<Product> products_;
+  std::map<Product, int> products_;
   std::vector<std::pair<int, int>> route_;
 
  public:
@@ -45,24 +46,26 @@ class Order {
     route_ = r;
   }
 
-  bool add(Product p) {
-    auto it = std::find(products_.begin(), products_.end(), p);
+  bool add(Product p, int quantity) {
+    auto it = products_.find(p);
     if (it != products_.end()) {
-      it->quantity_ += p.quantity_;
+      products_[p] += quantity;
       return false;
     }
 
-    products_.push_back(p);
+    products_.insert({p, quantity});
     return true;
   }
 
   void remove(Product p) {
-    auto it = std::find(products_.begin(), products_.end(), p);
+    auto it = products_.find(p);
 
-    if (it != products_.end()) products_.erase(it);
+    if (it != products_.end()) {
+      products_.erase(it);
+    }
   }
 
-  std::vector<Product>& products() {
+  std::map<Product, int>& products() {
     return products_;
   }
 

@@ -11,26 +11,24 @@ class Product {
  public:
   std::string name_;
   double weight_;
-  int quantity_;
 
-  Product(std::string name, double weight, int quantity) {
+  Product(std::string name, double weight) {
     name_ = name;
     weight_ = weight;
-    quantity_ = quantity;
   }
 
-  static JSON toJSON(const Product& p) {
+  static JSON toJSON(const Product& p, int quantity) {
     JSON j;
     j["name"] = p.name_;
     j["weight"] = p.weight_;
-    j["quantity"] = p.quantity_;
+    j["quantity"] = quantity;
     return j;
   }
 
-  static JSON toJSON(const std::vector<Product>& products) {
+  static JSON toJSON(std::map<Product, int>& products) {
     JSON j;
     for (const auto& p : products) {
-      j.push_back(toJSON(p));
+      j.push_back(toJSON(p.first, p.second));
     }
     return j;
   }
