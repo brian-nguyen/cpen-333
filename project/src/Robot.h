@@ -49,7 +49,8 @@ class Robot : public cpen333::thread::thread_object {
   
   public:
     Robot(DynamicOrderQueue& queue) :
-      id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), queue_(queue) {
+      id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), queue_(queue)
+    {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
       winfo_ = memory_->winfo;
       id_ = memory_->rinfo.nrobots;
@@ -138,7 +139,6 @@ class Robot : public cpen333::thread::thread_object {
       while (1) {
         safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
         for (auto& pair : o.route()) {
-          winfo_ = memory_->winfo;
           if (go(pair) == 0) {
             safe_printf("ERROR COMPLETING ORDER\n");
           }
@@ -146,7 +146,9 @@ class Robot : public cpen333::thread::thread_object {
         o.set_status(READY);
         safe_printf("Robot %d completed Order %d on location {%d, %d}\n", id_, o.id_, o.route().back().first, o.route().back().second);
 
-        // acquire next order
+        // clear internal warehouse memory
+        // and acquire next order
+        winfo_ = memory_->winfo;        
         o = queue_.get();
       }
 

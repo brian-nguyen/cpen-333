@@ -13,6 +13,7 @@ using JSON = nlohmann::json;
 #include "common.h"
 #include "Robot.h"
 #include "Product.h"
+#include "Shelf.h"
 #include "Order.h"
 #include "DynamicOrderQueue.h"
 
@@ -23,12 +24,12 @@ class Computer {
   DynamicOrderQueue queue_;
   std::vector<Robot*> robots_;
 
-  int orders_;
+  std::vector<Shelf> shelves_;
 
  public:
 
   Computer() :
-    memory_(SHARED_MEMORY_NAME), robots_(), inventory_(), queue_(), orders_(0) { }
+    memory_(SHARED_MEMORY_NAME), robots_(), inventory_(), queue_(), shelves_() { }
 
   void load_warehouse(std::string filename) {
       memory_->winfo.rows = 0;
@@ -68,18 +69,18 @@ class Computer {
 
       for (const auto& jitem : jinventory) {
         Product p(jitem["name"], (double)jitem["weight"], 10);
-
         auto it = inventory_.insert({ p.name_, p.quantity_ });
       }
     }
   }
 
-  void load_shelves() {
+  void load_shelves_and_docks() {
     for (int c = 0; c < memory_->winfo.cols; c++) {
       for (int r = 0; r < memory_->winfo.rows; r++) {
         if (memory_->winfo.warehouse[c][r] == SHELF_CHAR) {
           std::pair<int, int> loc(c, r);
-          safe_printf("Shelf located at {%d, %d}\n", c, r);
+          Shelf s(999.0, loc);
+          shelves_.push_back(s);
         } else if (memory_->winfo.warehouse[c][r] == DOCK_CHAR) {
           safe_printf("Dock located at {%d, %d}\n", c, r);
         }
@@ -133,7 +134,6 @@ class Computer {
   }
 
   void add_order(Order o) {
-    orders_++;
     queue_.add(o);
   }
 
@@ -170,7 +170,6 @@ class Computer {
       queue_.add(o1);
       queue_.add(o2);
       queue_.add(o3);
-      orders_ += 3;
   }
 
   void view_inventory() {

@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
   // start computer and load layout and inventory
   Computer computer;
   computer.load_warehouse(name);
-  computer.load_shelves();
+  computer.load_shelves_and_docks();
   computer.load_inventory();
   computer.init_robots();
 

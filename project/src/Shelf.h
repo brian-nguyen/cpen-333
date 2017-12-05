@@ -19,10 +19,6 @@ class Shelf {
     return location_;
   }
 
-  void set_location(std::pair<int, int> location) {
-    location_ = location;
-  }
-
   bool add(Product p) {
     auto it = std::find(products_.begin(), products_.end(), p);
     if (it != products_.end()) {

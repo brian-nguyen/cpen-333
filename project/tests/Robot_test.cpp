@@ -72,7 +72,6 @@ void testRobotMoveToGoals() {
 }
 
 int main() {
-  cpen333::process::shared_object<SharedData> memory(SHARED_MEMORY_NAME);
   try {
     testRobotSpawn();
     testRobotSpawnMultiple();
@@ -84,7 +83,6 @@ int main() {
     std::cout << exc.what() << std::endl;
   }
 
-  memory.unlink();
   return 0;
 }
 
