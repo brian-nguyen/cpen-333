@@ -2,6 +2,10 @@
 #define AMAZOOM_TRUCK
 
 #include <iostream>
+#include <vector>
+
+#include "Order.h"
+#include "Product.h"
 
 class Truck {
  public:
@@ -13,15 +17,25 @@ class Truck {
     : max_weight_(max_weight), status_(status), dock_(dock) { }
 };
 
-class DeliveryTruck : Truck {
+class DeliveryTruck : public Truck {
+  std::vector<Order> orders_;
+
  public:
+  DeliveryTruck(double max_weight, int status, int dock)
+    : Truck(max_weight, status, dock), orders_() { }
+
   bool add() {
     return true;
   }
 };
 
-class InventoryTruck : Truck {
+class InventoryTruck : public Truck {
+  std::vector<Product> products_;
+
  public:
+  InventoryTruck(double max_weight, int status, int dock)
+  : Truck(max_weight, status, dock), products_() { }
+
   void remove() {
     std::cout << "Removing..." << std::endl;
   }

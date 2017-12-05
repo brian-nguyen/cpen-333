@@ -8,6 +8,7 @@
 #include <thread>
 #include <chrono>
 #include <random>
+#include <algorithm>
 
 #include "common.h"
 #include "safe_printf.h"
@@ -20,6 +21,8 @@
 class Robot : public cpen333::thread::thread_object {
   cpen333::process::shared_object<SharedData> memory_;
   cpen333::process::mutex mutex_;
+
+  std::vector<Order>& orders_;
 
   WarehouseInfo winfo_;
   int id_;
@@ -48,8 +51,8 @@ class Robot : public cpen333::thread::thread_object {
   }
   
   public:
-    Robot(DynamicOrderQueue& queue) :
-      id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), queue_(queue)
+    Robot(std::vector<Order>& orders, DynamicOrderQueue& queue) :
+      id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), orders_(orders), queue_(queue)
     {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
       winfo_ = memory_->winfo;
@@ -138,17 +141,20 @@ class Robot : public cpen333::thread::thread_object {
       Order o = queue_.get();
       while (1) {
         safe_printf("Robot %d acquired Order %d\n", id_, o.id_);
+
+        int result;
         for (auto& pair : o.route()) {
-          if (go(pair) == 0) {
-            safe_printf("ERROR COMPLETING ORDER\n");
-          }
+          result = go(pair);
+          winfo_ = memory_->winfo;
         }
-        o.set_status(READY);
-        safe_printf("Robot %d completed Order %d on location {%d, %d}\n", id_, o.id_, o.route().back().first, o.route().back().second);
+
+        if (result == 1) {
+          auto it = std::find(orders_.begin(), orders_.end(), o);
+          it->set_status(READY);
+          safe_printf("Robot %d completed Order %d on location {%d, %d}\n", id_, o.id_, o.route().back().first, o.route().back().second);
+        }
 
         // clear internal warehouse memory
-        // and acquire next order
-        winfo_ = memory_->winfo;        
         o = queue_.get();
       }
 

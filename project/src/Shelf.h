@@ -32,8 +32,18 @@ class Shelf {
 
   void remove(Product p) {
     auto it = std::find(products_.begin(), products_.end(), p);
+    if (it != products_.end()) {
+      products_.erase(it);
+    }
+  }
 
-    if (it != products_.end()) products_.erase(it);    
+  bool has_product(Product p) {
+    auto it = std::find(products_.begin(), products_.end(), p);
+    if (it != products_.end()) {
+      return true;
+    }
+
+    return false;
   }
 
   std::vector<Product>& products() {

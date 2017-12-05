@@ -34,7 +34,7 @@ class Product {
     }
     return j;
   }
-  
+
   friend bool operator<(const Product& a, const Product& b) {
     return a.name_ < b.name_;
   }

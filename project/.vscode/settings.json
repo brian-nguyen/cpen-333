@@ -24,6 +24,7 @@
     "deque": "cpp",
     "type_traits": "cpp",
     "__locale": "cpp",
-    "ios": "cpp"
+    "ios": "cpp",
+    "bitset": "cpp"
   }
 }
