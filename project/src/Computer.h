@@ -155,6 +155,8 @@ class Computer {
   }
 
   void add_order(Order o) {
+    int next_id = orders_.size();
+    o.id_ = next_id;
     safe_printf("Adding order %d\n", o.id_);
     {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
@@ -186,6 +188,7 @@ class Computer {
       }
 
       if (route.size() > 0) o.set_route(route);
+      o.set_status(PLACED);
       orders_.push_back(o);
     }
     queue_.add(o);

@@ -20,10 +20,9 @@ void service(std::mutex& mutex, Computer& computer, WarehouseApi&& api, int id) 
     switch (msg->type()) {
       case ORDER_MSG: {
         OrderMessage& omsg = (OrderMessage &) (*msg);
-        std::cout << "Client " << id << " making order " << omsg.order.id_ << std::endl;
+        std::cout << "Client " << id << " making order\n";
 
-        // computer.spawn_robot();
-        // computer.test_order_queue();
+        computer.add_order(omsg.order);
 
         if (api.sendMessage(OrderResponse(omsg, "", "OK"))) {
           std::cout << "Success\n";
@@ -53,6 +52,20 @@ void service(std::mutex& mutex, Computer& computer, WarehouseApi&& api, int id) 
 
 }
 
+void receive_connections(cpen333::process::socket_server& server, std::mutex& mutex, Computer& computer) {
+  int id = 0;
+  cpen333::process::socket client;
+  while (true) {
+    if (server.accept(client)) {
+      WarehouseApi api(std::move(client));      
+      std::thread thread(service, std::ref(mutex), std::ref(computer), std::move(api), id);
+      thread.detach();
+
+      id++;
+    }
+  }
+}
+
 int main(int argc, char* argv[]) {
   // load warehouse layout
   std::string name = "data/warehouse0.txt";
@@ -68,6 +81,11 @@ int main(int argc, char* argv[]) {
   computer.init_shelves_and_docks();
   computer.load_inventory();
   computer.init_robots();
+
+  // spawn set number of robots
+  // for (int i = 0; i < 1; i++) {
+    computer.spawn_robot();
+  // }
   
   // start server
   cpen333::process::socket_server server(PORT);
@@ -78,14 +96,57 @@ int main(int argc, char* argv[]) {
   int id = 0;
   std::mutex mutex;
   cpen333::process::socket client;
-  while (true) {
-    if (server.accept(client)) {
-      WarehouseApi api(std::move(client));
 
-      std::thread thread(service, std::ref(mutex), std::ref(computer), std::move(api), id);
-      thread.detach();
+  // thread to handle incoming connections
+  std::thread thread(receive_connections, std::ref(server), std::ref(mutex), std::ref(computer));
+  thread.detach();
 
-      id++;
+  char cmd = 0;
+  while (!memory->quit) {
+    computer.show_menu();
+
+    std::cin >> cmd;
+    std::cin.ignore (std::numeric_limits<std::streamsize>::max(), '\n');
+
+    switch (cmd) {
+      case '0': {
+        memory->quit = true;
+      }
+      case '1': {
+        computer.spawn_robot();
+        break;
+      }
+      case '2': {
+        computer.view_inventory();
+        break;
+      }
+      case '3': {
+        safe_printf("Enter a product name: ");
+        char input[100];
+        std::cin.getline(input, sizeof(input));
+        std::string str(input);
+        safe_printf("Searching for %s\n", str.c_str());
+        if (computer.view_stock(str) == -1) {
+          safe_printf("\tProduct does not exist\n");
+        } else {
+          safe_printf("\t%d %s\n", computer.view_stock(str), str.c_str());
+        }
+        break;
+      }
+      case '4': {
+        safe_printf("Enter a status: ");
+        char s = 0;
+        std::cin >> s;
+        computer.view_orders((int)s);
+        break;
+      }
+      case '5': {
+        computer.view_shelves();
+        break;
+      }
+      default: {
+        safe_printf("Invalid or disabled command\n");
+      }
     }
   }
 

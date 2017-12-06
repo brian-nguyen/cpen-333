@@ -24,7 +24,8 @@ void do_order(WarehouseApi &api) {
     std::cin >> cmd;
     switch (cmd) {
       case '1': {
-        std::cout << "\tEnter a product id: ";
+        std::cout << "\tEnter a product id:\n";
+        std::cout << "\t1. Spoon\n" << "\t2. Fork\n" << "\t3. Knife\n" << "\t4. Chopsticks\n" << "\t5. Tongs\n";
         char type = 0;
         std::cin >> type;
         char quantity = 0;
@@ -68,10 +69,11 @@ void do_order(WarehouseApi &api) {
         break;
       }
       case '2': {
+        done = true;
         break;
       }
       default: {
-        done = true;
+        std::cout << "\tInvalid command\n";
       }
     }
   }
