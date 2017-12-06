@@ -85,8 +85,12 @@ int main(int argc, char* argv[]) {
         computer.arrive(DELIVERY_TRUCK);
         break;
       }
+      // case '9': {
+      //   computer.arrive(INVENTORY_TRUCK);        
+      //   break;
+      // }
       case '9': {
-        computer.arrive(INVENTORY_TRUCK);        
+        computer.view_low_stock();
         break;
       }
       default:

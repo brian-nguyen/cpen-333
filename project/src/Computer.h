@@ -294,6 +294,15 @@ class Computer {
     return -1;
   }
 
+  void view_low_stock() {
+    std::lock_guard<decltype(mutex_)> lock(mutex_);
+    for (const auto& p : inventory_) {
+      if (p.second <= 3) {
+        safe_printf("%s is low in stock\n", p.first.name_.c_str());
+      }
+    }
+  }
+
   void view_inventory() {
     std::lock_guard<decltype(mutex_)> lock(mutex_);    
     for (const auto& pair : inventory_) {
