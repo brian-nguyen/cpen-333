@@ -61,6 +61,7 @@ class Computer {
 
         memory_->winfo.rows = row;
         fin.close();
+        safe_printf("Layout loaded\n");
       }
   }
 
@@ -73,23 +74,27 @@ class Computer {
       fin >> jinventory;
 
       std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
-      std::uniform_int_distribution<size_t> dist(0, 15);
+      std::uniform_int_distribution<size_t> dist(1, 15);
       for (const auto& jitem : jinventory) {
         Product p(jitem["name"], (double)jitem["weight"]);
         int quantity = dist(rnd);
         auto it = inventory_.insert({ p, quantity });
       }
+      safe_printf("Inventory loaded\n");
 
       load_shelves(inventory_);
+      safe_printf("Shelves loaded\n");
     }
   }
 
   void load_shelves(std::map<Product, int> products) {
     std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<size_t> dist(1, shelves_.size());
+    std::uniform_int_distribution<int> dist(0, shelves_.size() - 1);
 
     for (auto& pair : products) {
-      shelves_[dist(rnd)].add(pair.first, pair.second);
+      int shelf = dist(rnd);
+      safe_printf("\tPlacing %d %s on Shelf %d\n", pair.second, pair.first.name_.c_str(), shelf);     
+      bool is_new = shelves_[shelf].add(pair.first, pair.second);
     }
   }
 
@@ -124,6 +129,7 @@ class Computer {
       memory_->rinfo.rloc[i][COL_IDX] = c;
       memory_->rinfo.rloc[i][ROW_IDX] = r;
     }
+    safe_printf("Robots initialized\n");
   }
 
   void spawn_robot() {

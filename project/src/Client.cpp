@@ -2,21 +2,79 @@
 #include <cpen333/process/socket.h>
 
 #include "common.h"
+#include "safe_printf.h"
 #include "Message.h"
 #include "WarehouseAPI.h"
 #include "Order.h"
 
 void print_menu() {
-  std::cout << "1: Order test\n";
-  std::cout << "2: Query test\n";
+  std::cout << "\n1: Order\n";
+  std::cout << "2: Query\n";
   std::cout << std::endl;
 }
 
 // add an order to remote server
 void do_order(WarehouseApi &api) {
-  Order o(0, 0);
-  Product p("banana", 2.2);
-  o.add(p, 2);
+  Order o(0, NEW_ORDER);
+  bool done = false;
+  
+  while (!done) {
+    std::cout << "\t1: Add Product\n\t2: Place Order\n";
+    char cmd = 0;
+    std::cin >> cmd;
+    switch (cmd) {
+      case '1': {
+        std::cout << "\tEnter a product id: ";
+        char type = 0;
+        std::cin >> type;
+        char quantity = 0;
+        std::cout << "\tEnter a quantity: ";
+        std::cin >> quantity;
+        switch (type) {
+          case '1': {
+            Product p("Spoon", 0.0);
+            o.add(p, (int)quantity - 48);
+            break;
+          }
+          case '2': {
+            Product p("Fork", 0.0);
+            o.add(p, (int)quantity - 48);
+            break;            
+          }
+          case '3': {
+            Product p("Knife", 0.0);
+            o.add(p, (int)quantity - 48);
+            break;            
+          }
+          case '4': {
+            Product p("Chopsticks", 0.0);
+            o.add(p, (int)quantity - 48);
+            break;            
+          }
+          case '5': {
+            Product p("Tongs", 0.0);
+            o.add(p, (int)quantity - 48);
+            break;            
+          }
+          default: {
+            std::cout << "\tInvalid product\n";
+          }
+        }
+        
+        std::cout << "\tOrder contains:\n";
+        for (const auto& p : o.products_) {
+          std::cout << "\t\t" << p.second << " " << p.first.name_ << std::endl;
+        }
+        break;
+      }
+      case '2': {
+        break;
+      }
+      default: {
+        done = true;
+      }
+    }
+  }
 
   // send message to server and wait for response
   OrderMessage msg(o);

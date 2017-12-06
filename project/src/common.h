@@ -14,7 +14,7 @@
 #define MAX_WAREHOUSE_SIZE 80
 #define MAX_ROBOTS 19
 
-#define SHARED_MEMORY_NAME "project_amazoom"
+#define SHARED_MEMORY_NAME "project_amazoom3"
 #define SHARED_MUTEX_NAME "amazoom_mutex"
 #define WAREHOUSE_MUTEX_NAME "amazoom_warehouse_mutex"
 

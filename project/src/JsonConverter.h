@@ -18,7 +18,7 @@ class JsonConverter {
   static JSON toJSON(const Product& p) {
     JSON j;
     j["name"] = p.name_;
-    j["weight"] = p.weight_;
+    j["weight"] = 0;
     return j;
   }
 
@@ -62,6 +62,22 @@ class JsonConverter {
     j["info"] = omsg_response.info;
     j["status"] = omsg_response.status;
     j["original"] = toJSON(omsg_response.omsg);
+    return j;
+  }
+
+  static JSON toJSON(const QueryMessage& qmsg) {
+    JSON j;
+    j["type"] = QUERY_MSG;
+    j["product"] = toJSON(qmsg.product);
+    return j;
+  }
+
+  static JSON toJSON(const QueryResponse& qmsg_response) {
+    JSON j;
+    j["type"] = QUERY_RESPONSE;
+    j["info"] = qmsg_response.info;
+    j["status"] = qmsg_response.status;
+    j["original"] = toJSON(qmsg_response.qmsg);
     return j;
   }
 
