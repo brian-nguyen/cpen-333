@@ -8,7 +8,7 @@
 #include <map>
 #include <cpen333/process/shared_memory.h>
 #include <cpen333/process/mutex.h>
-#include <cpen333/process/semaphore.h>
+#include <cpen333/thread/semaphore.h>
 
 #include <json.hpp>
 using JSON = nlohmann::json;
@@ -34,10 +34,12 @@ class Computer {
 
   std::vector<Shelf> shelves_;
   std::vector<Dock> docks_;
+  std::vector<Truck*> trucks_;
+  cpen333::thread::semaphore semaphore_;
  public:
 
   Computer() :
-    memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), robots_(), inventory_(), queue_(), shelves_() { }
+    memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), semaphore_(0), robots_(), inventory_(), queue_(), shelves_() { }
 
   void load_warehouse(std::string filename) {
       memory_->winfo.rows = 0;
@@ -109,10 +111,11 @@ class Computer {
           Shelf s(999.0, loc);
           shelves_.push_back(s);
         } else if (memory_->winfo.warehouse[c][r] == DOCK_CHAR) {
-          safe_printf("Dock located at {%d, %d}\n", c, r);
           std::pair<int, int> loc(c, r);
+          loc.second++;
           Dock d(loc);
           docks_.push_back(d);
+          semaphore_.notify();
         }
       }
     }
@@ -144,7 +147,7 @@ class Computer {
       return;
     }
 
-    robots_.push_back(new Robot(orders_, queue_));
+    robots_.push_back(new Robot(orders_, queue_, trucks_));
     robots_.back()->start();
   }
 
@@ -204,8 +207,31 @@ class Computer {
     queue_.add(o);
   }
 
-  void arrive(Truck& t) {
+  void arrive(int type) {
+    if (type == DELIVERY_TRUCK) {
+      trucks_.push_back(new DeliveryTruck(3, semaphore_));
+    } else if (type == INVENTORY_TRUCK) {
+      InventoryTruck* t = new InventoryTruck(3, semaphore_);
+      // fill inventory truck with random amount of product
+      std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
+      std::uniform_int_distribution<size_t> dist(1, 15);
 
+      {
+        std::lock_guard<decltype(mutex_)> lock(mutex_);      
+        for (const auto& pair : inventory_) {
+          int amount = dist(rnd);
+          t->add(pair.first, amount);
+          inventory_[pair.first] += amount;
+        }
+      }
+
+      trucks_.push_back(t);
+    } else {
+      safe_printf("Unknown truck type\n");
+      return;
+    }
+
+    trucks_.back()->start();
   }
 
   void test_order_completion() {
@@ -251,7 +277,7 @@ class Computer {
   }
 
   void show_menu() {
-    safe_printf("\n---\nWAREHOUSE MANAGER, ENTER A COMMAND\n0: Quit\n1: Spawn Robot\n2: View Inventory\n3: View Stock\n4: Show Orders\n5: View Shelf\n6: Test Orders\n7: Test Placed Order\n---\n\n");
+    safe_printf("\n---\nWAREHOUSE MANAGER, ENTER A COMMAND\n0: Quit\n1: Spawn Robot\n2: View Inventory\n3: View Stock\n4: Show Orders\n5: View Shelf\n6: Test Orders\n7: Test Placed Order\n8: Spawn Delivery Truck\n9: Spawn Inventory Truck\n---\n\n");
   }
 
   int view_stock(std::string& name) {

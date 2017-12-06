@@ -154,6 +154,14 @@ int main(int argc, char* argv[]) {
         computer.view_shelves();
         break;
       }
+      case '8': {
+        computer.arrive(DELIVERY_TRUCK);
+        break;
+      }
+      case '9': {
+        computer.arrive(INVENTORY_TRUCK);        
+        break;
+      }
       default: {
         safe_printf("Invalid or disabled command\n");
       }

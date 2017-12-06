@@ -8,9 +8,9 @@
 
 class Dock {
   std::pair<int, int> location_;
-  Truck& truck_;
  public:
-  Dock(std::pair<int, int> loc, Truck truck) : location_(loc), truck_(truck) { }
+  bool is_free;
+  Dock(std::pair<int, int> loc) : location_(loc), is_free(false) { }
 };
 
 #endif

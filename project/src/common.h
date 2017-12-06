@@ -16,7 +16,7 @@
 
 #define SHARED_MEMORY_NAME "project_amazoom3"
 #define SHARED_MUTEX_NAME "amazoom_mutex"
-#define WAREHOUSE_MUTEX_NAME "amazoom_warehouse_mutex"
+#define SHARED_DOCK_SEMAPHORE "amazoom_semaphore"
 
 struct WarehouseInfo {
   int rows;

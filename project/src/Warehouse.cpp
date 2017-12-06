@@ -12,6 +12,7 @@ using JSON = nlohmann::json;
 #include "Computer.h"
 #include "Robot.h"
 #include "Product.h"
+#include "Truck.h"
 
 int main(int argc, char* argv[]) {
   // load warehouse layout
@@ -78,6 +79,14 @@ int main(int argc, char* argv[]) {
       }
       case '7': {
         computer.test_order_completion();
+        break;
+      }
+      case '8': {
+        computer.arrive(DELIVERY_TRUCK);
+        break;
+      }
+      case '9': {
+        computer.arrive(INVENTORY_TRUCK);        
         break;
       }
       default:

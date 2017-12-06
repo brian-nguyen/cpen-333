@@ -13,6 +13,7 @@
 #include "common.h"
 #include "safe_printf.h"
 
+#include "Truck.h"
 #include "Order.h"
 #include "DynamicOrderQueue.h"
 
@@ -29,6 +30,7 @@ class Robot : public cpen333::thread::thread_object {
   int loc_[2];
 
   DynamicOrderQueue& queue_;
+  std::vector<Truck*>& trucks_;
 
   void random_travel() {
     std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
@@ -51,8 +53,8 @@ class Robot : public cpen333::thread::thread_object {
   }
   
   public:
-    Robot(std::vector<Order>& orders, DynamicOrderQueue& queue) :
-      id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), orders_(orders), queue_(queue)
+    Robot(std::vector<Order>& orders, DynamicOrderQueue& queue, std::vector<Truck*>& trucks) :
+      id_(0), memory_(SHARED_MEMORY_NAME), mutex_(SHARED_MUTEX_NAME), orders_(orders), queue_(queue), trucks_(trucks)
     {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
       winfo_ = memory_->winfo;
@@ -125,7 +127,7 @@ class Robot : public cpen333::thread::thread_object {
       // update UI
       memory_->rinfo.rloc[id_][COL_IDX] = c;
       memory_->rinfo.rloc[id_][ROW_IDX] = r;
-      std::this_thread::sleep_for(std::chrono::milliseconds(100));      
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
       return 0;
     }
 
@@ -152,9 +154,23 @@ class Robot : public cpen333::thread::thread_object {
           auto it = std::find(orders_.begin(), orders_.end(), o);
           it->set_status(READY);
           safe_printf("Robot %d completed Order %d on location {%d, %d}\n", id_, o.id_, o.route().back().first, o.route().back().second);
+
+          // wait until order is loaded on truck
+          bool is_loaded = false;
+          while (!is_loaded) {
+            for (Truck* t : trucks_) {
+              if (t->type_ == DELIVERY_TRUCK) {
+                t->add(o);
+                it->set_status(DELIVERED);
+                safe_printf("Robot %d loaded Order %d\n", id_, o.id_);
+                is_loaded = true;
+                break;
+              }
+            }
+          }
         }
 
-        // clear internal warehouse memory
+        // acquire next order
         o = queue_.get();
       }
 
