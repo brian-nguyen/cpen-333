@@ -269,6 +269,7 @@ class Computer {
   }
 
   void view_inventory() {
+    std::lock_guard<decltype(mutex_)> lock(mutex_);    
     for (const auto& pair : inventory_) {
       safe_printf("%s: %d\n", pair.first.name_.c_str(), pair.second);
     }
@@ -276,6 +277,7 @@ class Computer {
   }
 
   void view_shelves() {
+    std::lock_guard<decltype(mutex_)> lock(mutex_);    
     for (int i = 0; i < shelves_.size(); i++) {
       safe_printf("Shelf %d contains:\n", i);
       for (auto& pair : shelves_[i].products()) {
@@ -304,6 +306,7 @@ class Computer {
         safe_printf("Unknown status (%d). Showing all orders\n", status);
     }
 
+    std::lock_guard<decltype(mutex_)> lock(mutex_);    
     for (Order& o : orders_) {
       if (all || (o.status_ == s)) {
         safe_printf("Order %d\n", o.id_);
