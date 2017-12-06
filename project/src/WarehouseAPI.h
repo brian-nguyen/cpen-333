@@ -88,7 +88,7 @@ class WarehouseApi {
 
   bool sendMessage(const Message& msg) {
     JSON jmsg = JsonConverter::toJSON(msg);
-    std::cout << jmsg.dump() << std::endl;
+    // std::cout << jmsg.dump() << std::endl;
 
     char id = JSON_ID;
     if (!socket_.write(&id, 1)) {
@@ -109,7 +109,7 @@ class WarehouseApi {
       return nullptr;
     }
 
-    std::cout << jmsg.dump() << std::endl;
+    // std::cout << jmsg.dump() << std::endl;
     return JsonConverter::parseMessage(jmsg);
   }
 

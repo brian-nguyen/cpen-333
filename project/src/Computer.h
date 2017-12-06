@@ -205,7 +205,7 @@ class Computer {
   }
 
   void arrive(Truck& t) {
-    
+
   }
 
   void test_order_completion() {
@@ -257,9 +257,12 @@ class Computer {
   int view_stock(std::string& name) {
     safe_printf("Looking for %s\n", name.c_str());
     Product p(name, 0);
-    auto it = inventory_.find(p);
-    if (it != inventory_.end()) {
-      return it->second;
+    {
+      std::lock_guard<decltype(mutex_)> lock(mutex_);
+      auto it = inventory_.find(p);
+      if (it != inventory_.end()) {
+        return it->second;
+      }
     }
 
     return -1;

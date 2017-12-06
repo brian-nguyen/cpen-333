@@ -24,7 +24,7 @@ void service(std::mutex& mutex, Computer& computer, WarehouseApi&& api, int id) 
 
         {
           std::lock_guard<decltype(mutex)> lock(mutex);
-          // computer.add_order(omsg.order);
+          computer.add_order(omsg.order);
         }
 
         if (api.sendMessage(OrderResponse(omsg, "", "OK"))) {
@@ -56,7 +56,7 @@ void service(std::mutex& mutex, Computer& computer, WarehouseApi&& api, int id) 
       }
     }
 
-    api.recvMessage();
+    msg = api.recvMessage();
   }
 
 }
