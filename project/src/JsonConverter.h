@@ -8,6 +8,7 @@
 #include <json.hpp>
 using JSON = nlohmann::json;
 
+#include "safe_printf.h"
 #include "Message.h"
 #include "Product.h"
 #include "Order.h"
@@ -77,6 +78,7 @@ class JsonConverter {
     j["type"] = QUERY_RESPONSE;
     j["info"] = qmsg_response.info;
     j["status"] = qmsg_response.status;
+    j["quantity"] = qmsg_response.quantity;
     j["original"] = toJSON(qmsg_response.qmsg);
     return j;
   }
@@ -145,7 +147,8 @@ class JsonConverter {
     QueryMessage qmsg = parseQueryMessage(j["original"]);
     std::string info = j["info"];
     std::string status = j["status"];
-    return QueryResponse(qmsg, info, status);
+    int quantity = j["quantity"];
+    return QueryResponse(qmsg, info, status, quantity);
   }
 
   static std::unique_ptr<Message> parseMessage(const JSON &jmsg) {

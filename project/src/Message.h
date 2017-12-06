@@ -59,9 +59,10 @@ class QueryMessage : public Message {
 class QueryResponse : public ResponseMessage {
  public:
   const QueryMessage qmsg;
+  int quantity;
 
-  QueryResponse(const QueryMessage& qmsg, std::string info, std::string status) :
-    ResponseMessage(info, status), qmsg(qmsg) { }
+  QueryResponse(const QueryMessage& qmsg, std::string info, std::string status, int quantity) :
+    ResponseMessage(info, status), qmsg(qmsg), quantity(quantity) { }
 
   int type() const {
     return QUERY_RESPONSE;

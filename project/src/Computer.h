@@ -8,6 +8,7 @@
 #include <map>
 #include <cpen333/process/shared_memory.h>
 #include <cpen333/process/mutex.h>
+#include <cpen333/process/semaphore.h>
 
 #include <json.hpp>
 using JSON = nlohmann::json;
@@ -16,6 +17,8 @@ using JSON = nlohmann::json;
 #include "Robot.h"
 #include "Product.h"
 #include "Shelf.h"
+#include "Dock.h"
+#include "Truck.h"
 #include "Order.h"
 #include "DynamicOrderQueue.h"
 
@@ -30,7 +33,7 @@ class Computer {
   std::vector<Robot*> robots_;
 
   std::vector<Shelf> shelves_;
-
+  std::vector<Dock> docks_;
  public:
 
   Computer() :
@@ -107,6 +110,9 @@ class Computer {
           shelves_.push_back(s);
         } else if (memory_->winfo.warehouse[c][r] == DOCK_CHAR) {
           safe_printf("Dock located at {%d, %d}\n", c, r);
+          std::pair<int, int> loc(c, r);
+          Dock d(loc);
+          docks_.push_back(d);
         }
       }
     }
@@ -157,7 +163,11 @@ class Computer {
   void add_order(Order o) {
     int next_id = orders_.size();
     o.id_ = next_id;
-    safe_printf("Adding order %d\n", o.id_);
+    safe_printf("Adding order %d. Order contains:\n", o.id_);
+    for (const auto& p : o.products_) {
+      safe_printf("\t%d %s\n", p.second, p.first.name_.c_str());
+    }
+
     {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
       std::vector<std::pair<int, int>> route;
@@ -192,6 +202,10 @@ class Computer {
       orders_.push_back(o);
     }
     queue_.add(o);
+  }
+
+  void arrive(Truck& t) {
+    
   }
 
   void test_order_completion() {
@@ -241,6 +255,7 @@ class Computer {
   }
 
   int view_stock(std::string& name) {
+    safe_printf("Looking for %s\n", name.c_str());
     Product p(name, 0);
     auto it = inventory_.find(p);
     if (it != inventory_.end()) {

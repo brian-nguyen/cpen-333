@@ -1,5 +1,5 @@
-#ifdef AMAZOOM_TRUCK
-#define AMAZOOM_TRUCK
+#ifndef AMAZOOM_TRUCK_H
+#define AMAZOOM_TRUCK_H
 
 #include <iostream>
 #include <vector>

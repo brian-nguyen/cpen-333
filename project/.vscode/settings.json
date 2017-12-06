@@ -33,6 +33,8 @@
     "functional": "cpp",
     "limits": "cpp",
     "ratio": "cpp",
-    "tuple": "cpp"
+    "tuple": "cpp",
+    "__mutex_base": "cpp",
+    "mutex": "cpp"
   }
 }

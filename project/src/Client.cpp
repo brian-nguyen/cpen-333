@@ -8,9 +8,22 @@
 #include "Order.h"
 
 void print_menu() {
-  std::cout << "\n1: Order\n";
+  std::cout << "---\n1: Order\n";
   std::cout << "2: Query\n";
-  std::cout << std::endl;
+  std::cout << "---\n";
+  std::cout.flush();
+}
+
+void print_products() {
+  std::cout << "------\n";
+  std::cout << "\tEnter a product id:\n";
+  std::cout << "\t1. Spoon\n";
+  std::cout << "\t2. Fork\n";
+  std::cout << "\t3. Knife\n";
+  std::cout << "\t4. Chopsticks\n";
+  std::cout << "\t5. Tongs\n";
+  std::cout << "------\n";
+  std::cout.flush();
 }
 
 // add an order to remote server
@@ -20,12 +33,12 @@ void do_order(WarehouseApi &api) {
   
   while (!done) {
     std::cout << "\t1: Add Product\n\t2: Place Order\n";
+    std::cout.flush();
     char cmd = 0;
     std::cin >> cmd;
     switch (cmd) {
       case '1': {
-        std::cout << "\tEnter a product id:\n";
-        std::cout << "\t1. Spoon\n" << "\t2. Fork\n" << "\t3. Knife\n" << "\t4. Chopsticks\n" << "\t5. Tongs\n";
+        print_products();
         char type = 0;
         std::cin >> type;
         char quantity = 0;
@@ -62,18 +75,24 @@ void do_order(WarehouseApi &api) {
           }
         }
         
-        std::cout << "\tOrder contains:\n";
+        std::cout << "\tOrder contains:\n\n";
         for (const auto& p : o.products_) {
           std::cout << "\t\t" << p.second << " " << p.first.name_ << std::endl;
         }
+        std::cout << std::endl;
         break;
       }
       case '2': {
-        done = true;
+        if (o.products_.size() > 0) {
+          done = true;
+        } else {
+          std::cout << "\tAdd a product\n";
+        }
         break;
       }
       default: {
         std::cout << "\tInvalid command\n";
+        return;
       }
     }
   }
@@ -97,8 +116,36 @@ void do_order(WarehouseApi &api) {
 
 // query stock of product
 void do_query(WarehouseApi &api) {
-  Product p("banana", 2.2);
-  
+  Product p("asf", 0.0);
+  print_products();
+  char cmd = 0;
+  std::cin >> cmd;
+  switch (cmd) {
+    case '1': {
+      p.name_ = "Spoon";
+      break;
+    }
+    case '2': {
+      p.name_ = "Fork";
+      break;
+    }
+    case '3': {
+      p.name_ = "Knife";
+      break;
+    }
+    case '4': {
+      p.name_ = "Chopsticks";
+      break;
+    }
+    case '5': {
+      p.name_ = "Tongs";
+      break;
+    }
+    default: {
+      std::cout << "Invalid selection\n";
+    }                   
+  }
+
   // send message to server and wait for response
   QueryMessage msg(p);
   if (api.sendMessage(msg)) {
@@ -107,7 +154,7 @@ void do_query(WarehouseApi &api) {
     QueryResponse& resp = (QueryResponse&)(*msgr);
 
     if (resp.status == "OK") {
-      std::cout << std::endl << "Success" << std::endl;
+      std::cout << "There are " << resp.quantity << std::endl;
     } else {
       std::cout << std::endl << "Fail" << std::endl;
     }
@@ -119,6 +166,7 @@ void do_query(WarehouseApi &api) {
 int main() {
   cpen333::process::socket socket("localhost", PORT);
   std::cout << "Client connecting... ";
+  std::cout.flush();
 
   if (socket.open()) {
     std::cout << "SUCCESS\n";

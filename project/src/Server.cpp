@@ -22,7 +22,10 @@ void service(std::mutex& mutex, Computer& computer, WarehouseApi&& api, int id) 
         OrderMessage& omsg = (OrderMessage &) (*msg);
         std::cout << "Client " << id << " making order\n";
 
-        computer.add_order(omsg.order);
+        {
+          std::lock_guard<decltype(mutex)> lock(mutex);
+          // computer.add_order(omsg.order);
+        }
 
         if (api.sendMessage(OrderResponse(omsg, "", "OK"))) {
           std::cout << "Success\n";
@@ -35,7 +38,13 @@ void service(std::mutex& mutex, Computer& computer, WarehouseApi&& api, int id) 
         QueryMessage& qmsg = (QueryMessage &) (*msg);
         std::cout << "Client " << id << " querying for " << qmsg.product.name_ << std::endl;
 
-        if (api.sendMessage(QueryResponse(qmsg, "", "OK"))) {
+        int quantity = 0;
+        {
+          std::lock_guard<decltype(mutex)> lock(mutex);          
+          quantity = computer.view_stock(qmsg.product.name_);
+        }
+
+        if (api.sendMessage(QueryResponse(qmsg, "", "OK", quantity))) {
           std::cout << "Success\n";
         } else {
           std::cout << "Fail\n";
@@ -91,6 +100,8 @@ int main(int argc, char* argv[]) {
   cpen333::process::socket_server server(PORT);
   if (server.open()) {
     std::cout << "Starting server on port " << PORT << std::endl;
+  } else {
+    return 0;
   }
 
   int id = 0;
@@ -99,7 +110,6 @@ int main(int argc, char* argv[]) {
 
   // thread to handle incoming connections
   std::thread thread(receive_connections, std::ref(server), std::ref(mutex), std::ref(computer));
-  thread.detach();
 
   char cmd = 0;
   while (!memory->quit) {
