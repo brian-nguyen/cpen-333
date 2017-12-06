@@ -76,6 +76,10 @@ int main(int argc, char* argv[]) {
         computer.test_order_queue();
         break;
       }
+      case '7': {
+        computer.test_order_completion();
+        break;
+      }
       default:
        safe_printf("nani?\n");
     }

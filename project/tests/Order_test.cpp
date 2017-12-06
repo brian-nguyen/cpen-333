@@ -1,25 +1,25 @@
 #include <iostream>
+#include <map>
 
 #include "TestException.h"
 #include "Order.h"
 #include "Product.h"
 
 void testAddProduct(Order& o, Product& p) {
-  o.add(p);
-  
-  for (const auto& product : o.products()) {
-    if (product == p) return;
-  }
+  o.add(p, 1);
+  auto it = o.products().find(p);
+
+  if (it != o.products().end()) return;
 
   throw TestException(std::string("Product not added properly"));
 }
 
 void testAddDuplicateProduct(Order& o, Product& p) {
-  o.add(p);
-  
-  for (const auto& product : o.products()) {
-    if (product == p && product.quantity_ == 4) return;
-  }
+  o.add(p, 1);
+  std::map<Product, int> products = o.products();
+
+  auto it = products.find(p);  
+  if (it != products.end() && (it->second == 2)) return;
 
   throw TestException(std::string("Product not added properly"));
 }
@@ -27,17 +27,18 @@ void testAddDuplicateProduct(Order& o, Product& p) {
 void testRemoveProduct(Order& o, Product& p) {
   o.remove(p);
 
-  for (const auto& product : o.products()) {
-    if (product == p) throw TestException(std::string("Product not removed"));
-  }
+  auto it = o.products().find(p);
+  if (it == o.products().end()) return;
+
+  throw TestException(std::string("Product not removed properly"));
 }
 
 int main() {
   Order o(0, 0);
 
   try {
-    Product p("fork", 4.2, 2);
-    Product p2("spoon", 3.3, 1);
+    Product p("fork", 4.2);
+    Product p2("spoon", 3.3);
     testAddProduct(o, p);
     testAddProduct(o, p2);    
     testAddDuplicateProduct(o, p);

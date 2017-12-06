@@ -30,11 +30,21 @@ class Shelf {
     return true;
   }
 
-  void remove(Product p, int quantity) {
+  int remove(Product p, int quantity) {
     auto it = products_.find(p);
     if (it != products_.end()) {
-      products_.erase(it);
+      int n = it->second - quantity;
+      
+      if (n <= 0) {
+        products_.erase(it);
+        return n < 0 ? it->second : quantity;
+      } else {
+        products_[p] -= quantity;
+        return quantity;
+      }
     }
+
+    return 0;
   }
 
   bool has_product(Product p) {

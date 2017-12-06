@@ -1,6 +1,8 @@
 #ifndef AMAZOOM_COMMON_H
 #define AMAZOOM_COMMON_H
 
+#define PORT 52102
+
 #define WALL_CHAR 'X'
 #define DOCK_CHAR '_'
 #define EMPTY_CHAR ' '

@@ -17,22 +17,6 @@ class Product {
     weight_ = weight;
   }
 
-  static JSON toJSON(const Product& p, int quantity) {
-    JSON j;
-    j["name"] = p.name_;
-    j["weight"] = p.weight_;
-    j["quantity"] = quantity;
-    return j;
-  }
-
-  static JSON toJSON(std::map<Product, int>& products) {
-    JSON j;
-    for (const auto& p : products) {
-      j.push_back(toJSON(p.first, p.second));
-    }
-    return j;
-  }
-
   friend bool operator<(const Product& a, const Product& b) {
     return a.name_ < b.name_;
   }

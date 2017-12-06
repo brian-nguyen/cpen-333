@@ -17,22 +17,17 @@ using JSON = nlohmann::json;
 #define DELIVERED 3
 
 class Order {
-  std::map<Product, int> products_;
   std::vector<std::pair<int, int>> route_;
 
  public:
+  std::map<Product, int> products_;
   int id_;
   int status_;
   
   Order(int id, int status) : id_(id), status_(status), products_() { }
 
-  static JSON toJSON(Order& o) {
-    JSON j;
-    j["id"] = o.id_;
-    j["status"] = o.status_;
-    j["products"] = Product::toJSON(o.products());
-    return j;
-  }
+  Order(int id, int status, std::map<Product, int> products) : id_(id), status_(status), products_(products) { }
+  
 
   void set_status(int new_status) {
     status_ = new_status;

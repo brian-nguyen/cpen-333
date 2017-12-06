@@ -86,7 +86,7 @@ class Computer {
 
   void load_shelves(std::map<Product, int> products) {
     std::default_random_engine rnd((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<size_t> dist(0, shelves_.size());
+    std::uniform_int_distribution<size_t> dist(1, shelves_.size());
 
     for (auto& pair : products) {
       shelves_[dist(rnd)].add(pair.first, pair.second);
@@ -149,11 +149,47 @@ class Computer {
   }
 
   void add_order(Order o) {
+    safe_printf("Adding order %d\n", o.id_);
     {
       std::lock_guard<decltype(mutex_)> lock(mutex_);
+      std::vector<std::pair<int, int>> route;
+      for (auto& pair : o.products()) {
+        safe_printf("\tLooking for %d %s\n", pair.second, pair.first.name_.c_str());
+        int amount = pair.second;
+
+        if (inventory_[pair.first] - amount < 0) {
+          safe_printf("NOT ENOUGH\n");
+          return;
+        }
+
+        // remove from inventory
+        inventory_[pair.first] -= amount;
+        // remove from shelf
+        for (Shelf& s : shelves_) {
+          if (s.has_product(pair.first)) {
+            int n = s.remove(pair.first, amount);
+            amount -= n;
+            std::pair<int, int> loc = s.get_location();
+            safe_printf("\t%d taken off shelf at location {%d, %d}\n", n, loc.first, loc.second);
+            loc.first += 1;
+            route.push_back(loc);
+          }
+
+          if (amount == 0) break;
+        }
+      }
+
+      if (route.size() > 0) o.set_route(route);
       orders_.push_back(o);
     }
     queue_.add(o);
+  }
+
+  void test_order_completion() {
+    Product p("Chopsticks", 1.0);
+    Order o(3, PLACED);
+    o.add(p, 1);
+    add_order(o);
   }
 
   void test_order_queue() {
@@ -192,7 +228,7 @@ class Computer {
   }
 
   void show_menu() {
-    safe_printf("\n---\nWAREHOUSE MANAGER, ENTER A COMMAND\n0: Quit\n1: Spawn Robot\n2: View Inventory\n3: View Stock\n4: Show Orders\n5: View Shelf\n6: Test Orders\n---\n\n");
+    safe_printf("\n---\nWAREHOUSE MANAGER, ENTER A COMMAND\n0: Quit\n1: Spawn Robot\n2: View Inventory\n3: View Stock\n4: Show Orders\n5: View Shelf\n6: Test Orders\n7: Test Placed Order\n---\n\n");
   }
 
   int view_stock(std::string& name) {
